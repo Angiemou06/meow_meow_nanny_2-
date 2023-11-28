@@ -1,0 +1,164 @@
+body{
+    margin: 0;
+}
+.main{
+    margin-top: 10vh;
+    height: 80vh;
+    background-color: rgb(240, 239, 239);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-container{
+    width: 80%;
+    height: 80%;
+    border: none;
+    outline: 1px solid #cccccc;
+    background-color: rgba(128,128,128,0.4);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-revise-intro-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#user-logo{
+    width: 40px;
+    height: 40px;
+    padding-right: 10px;
+}
+.profile-sub-container{
+    width: 80%;
+    height: 100%;
+}
+.profile-title{
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-bottom: 15px;
+    font-size: 20px;
+}
+
+.profile-picture{
+    width: 200px;
+    height: 200px;
+    padding: 50px;
+}
+.profilerevise-container{
+    margin-left: 40px;
+    margin-top: 20px;
+    height: 500px;
+    flex: 1;
+}
+.nickname-input{
+    margin-left: 40px;
+    padding: 10px;
+    width: 200px;
+    height: 32px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.email-input{
+    margin-left: 40px;
+    padding: 10px;
+    width: 350px;
+    height: 32px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.profile-input-container{
+    display: flex;
+}
+.submit{
+    margin-left: 15px;
+    font-size: 18px;
+}
+#profile-search-input{
+    width: 400px;
+    margin-right: 20px;
+}
+#get-location-button{
+    margin-top: 10px;
+    margin-left: 40px;
+    font-size: 20px;
+}
+#title-sub-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 10px;
+}
+.sub-title{
+    padding-right: 40px;
+    font-size: 20px;
+    border: none;
+    background-color: transparent;
+}
+#user-logo{
+    width: 40px;
+    height: 40px;
+    padding-right: 10px;
+    background-image: url("/static/image/user.png");
+    background-size: cover;
+    border: none;
+    background-color: transparent;
+    margin-right: 20px;
+}
+.profile-picture-container{
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #000000;
+    position: relative;
+
+}
+.profile-picture{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.profile-top{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.intro-title-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.intro{
+    width: 100%;
+    margin-left: 40px;
+}
+.intro-input{
+    margin-left: 80px;
+    padding: 10px;
+    width: 700px;
+    height: 120px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+footer{
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.footer{
+    font-family:"Comic Sans MS" ;
+}

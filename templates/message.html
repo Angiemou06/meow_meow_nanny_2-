@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>meow meow nanny</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/message.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function() {
+            socket.emit('my event', {data: 'I\'m connected!'});
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <div id="header">
+        <div id="title-container">
+            <button id="title" class="logo"></button>
+        </div>
+        <div id="title-sub-container">
+            <button class="sub-title" id="order-button">訂單</button>
+            <button class="sub-title" id="message-button">訊息</button>
+            <button class="sub-title" id="nanny-button">成為nanny</button>
+            <button class="sub-title" id="log-out">登出</button>
+            <button id="user-logo" ></button>
+        </div> 
+    </div>
+    <div class="main">
+        <div class="contact-container">
+            <div class="name-list" id="name-list">
+            </div>
+            <div class="message-container" id="message-container">
+                <div class="message" id="message"></div>
+                <div class="input-container">
+                    <input type="text" class="text-input" id="text-input" rows="3" placeholder="請輸入訊息"/>
+                    <button type="button" name="send" id="send-button" onClick="sendMessage()">送出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer">
+            Copyright © 2023 meow meow nanny. All rights reserved.
+        </div>
+    </footer>
+    <script src="../static/message.js"></script>
+</body>
+</html>

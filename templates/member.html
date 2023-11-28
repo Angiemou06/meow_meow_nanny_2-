@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>meow meow nanny</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/member.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+</head>
+<body>
+    <div id="header">
+        <div id="title-container">
+            <button id="title" class="logo"></button>
+        </div>
+        <div id="title-sub-container">
+            <button class="sub-title" id="order-button">訂單</button>
+            <button class="sub-title" id="message-button">訊息</button>
+            <button class="sub-title" id="nanny-button">成為nanny</button>
+            <button class="sub-title" id="log-out">登出</button>
+            <button id="user-logo"></button>
+        </div> 
+    </div>
+    <div class="main">
+        <div class="profile-container">
+            <div class="profile-sub-container">
+                <div class="profile-top">
+                     <div class="profile-picture-container">
+                        <img class="profile-picture" id="profile-picture" alt="大頭照">
+                    </div>
+                    <div class="profile-revise-container">
+                        <div class="profile-title">
+                            修改暱稱
+                        </div>
+                        <div class="profile-revise-container">
+                            <input id="nickname-input" class="nickname-input"/>
+                            <button id="nickname-submit" class="submit">修改</button>
+                        </div>
+                        <div class="profile-title">
+                            修改信箱
+                        </div>
+                        <div class="profile-revise-container">
+                            <input id="email-input" class="email-input"/>
+                            <button id="email-submit" class="submit">修改</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-title-container">
+                    <div class="profile-title intro">
+                        關於我
+                    </div>
+                </div>
+                <div class="profile-revise-intro-container">
+                    <input id="intro-input" class="intro-input"/>
+                    <button id="intro-submit" class="submit">修改</button>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    <footer>
+        <div class="footer">
+            Copyright © 2023 meow meow nanny. All rights reserved.
+        </div>
+    </footer>
+    <script src="../static/member.js"></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwe1b3XpisrWPZlRh-pqe5nB63d9_Z7Mo&libraries=places">
+    </script>
+</body>
+</html>

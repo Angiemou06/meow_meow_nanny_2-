@@ -1,0 +1,15 @@
+.main{
+    margin-top: 10vh;
+    height: 80vh;
+    background-color: rgb(240, 239, 239);
+}
+
+footer{
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.footer{
+    font-family:"Comic Sans MS" ;
+}

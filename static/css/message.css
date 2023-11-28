@@ -1,0 +1,107 @@
+.main{
+    margin-top: 10vh;
+    height: 80vh;
+    background-color: rgb(240, 239, 239);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contact-container{
+    width: 80%;
+    height: 80%;
+    border: none;
+    outline: 1px solid #cccccc;
+    background-color: rgba(128,128,128,0.4);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.name-list{
+    height: 90%;
+    width: 30%;
+    background-color: #ffffff;
+    border: 2px solid rgba(128,128,128);
+    overflow: auto;
+}
+.namelist-container{
+    display: flex;
+    margin: 10px;
+}
+.namelist-container:hover {
+    background-color: #cec9c9;
+}
+.contact-name{
+    height: 30px;
+    margin-left: 5px;
+    font-weight: 600;
+    font-size: 20px;
+}
+.contact-img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+.message-container{
+    height: 90%;
+    width: 60%;
+    background-color: #ffffff;
+    border: 2px solid rgba(128,128,128);
+}
+.message{
+    height: 85%;
+    overflow: auto;
+}
+.input-container{
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.text-input{
+    height: 30px;
+    width: 85%;
+    border: none;
+    outline: 1px solid #cccccc;
+    color: #757575;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    padding-left: 10px;
+}
+#send-button{
+    margin-left: 5px;
+    height: 30px;
+    border-radius: 5px;
+}
+.user-text{
+    text-align: right;
+    display: block;
+    margin: 15px;
+    padding-top: 10px;
+}
+.user-message{
+    background-color: #cec9c9;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 5px 0 5px 5px;
+}
+.contact-text{
+    margin: 15px;
+    padding-top: 10px;
+}
+.contact-message{
+    background-color: #e1d9d9;
+    color: #000000;
+    padding: 10px;
+    border-radius: 0 5px 5px 5px;
+}
+footer{
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.footer{
+    font-family:"Comic Sans MS" ;
+}

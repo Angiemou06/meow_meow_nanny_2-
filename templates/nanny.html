@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>meow meow nanny</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/nanny.css">
+</head>
+<body>
+     <div id="header">
+        <div id="title-container">
+            <button id="title" class="logo"></button>
+        </div>
+        <div id="title-sub-container">
+            <button class="sub-title" id="order-button">訂單</button>
+            <button class="sub-title" id="message-button">訊息</button>
+            <button class="sub-title" id="nanny-button">成為nanny</button>
+            <button class="sub-title" id="log-out">登出</button>
+            <button id="user-logo"></button>
+        </div> 
+    </div>
+    <div class="main">
+        <div class="profile-container">
+            <div class="profile-title">請先選擇服務費用</div>
+            <div class="price-container">
+                <button id="200" class="price-button">200元/次</button>
+                <button id="300" class="price-button">300元/次</button>
+                <button id="400" class="price-button">400元/次</button>
+                <button id="500" class="price-button">500元/次</button>
+                <button id="600" class="price-button">600元/次</button>
+            </div>
+            <div class="profile-title">再選擇可提供服務位置</div>
+            <input id="profile-search-input" class="profile-input"/>
+            <button id="get-location-button">取得當前坐標位置</button>
+            <div id="location-container"></div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer">
+            Copyright © 2023 meow meow nanny. All rights reserved.
+        </div>
+    </footer>
+    <script src="../static/nanny.js"></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwe1b3XpisrWPZlRh-pqe5nB63d9_Z7Mo&libraries=places">
+    </script>   
+</body>
+</html>

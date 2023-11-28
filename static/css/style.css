@@ -1,0 +1,158 @@
+body{
+    margin: 0;
+}
+#header{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(254, 254, 254, 0.9);
+    z-index: 4;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 10vh;
+    justify-content: space-between;
+}
+#title-sub-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 10px;
+}
+.sub-title{
+    padding-right: 40px;
+    font-size: 20px;
+    border: none;
+    background-color: transparent;
+}
+#title{
+    color: rgba(128,128,128);
+    font-size: 45px;
+    font-family: "Comic Sans MS";
+    border: none;
+    background-color: transparent;
+}
+.logo{
+    width: 300px;
+    height: 45px;
+    margin: 10px;
+    margin-left: 20px;
+    background-image: url("/static/image/logotitle.jpg");
+    background-size: cover;
+}
+#user-logo{
+    width: 40px;
+    height: 40px;
+    padding-right: 10px;
+    background-image: url("/static/image/user.png");
+    background-size: cover;
+    border: none;
+    background-color: transparent;
+    margin-right: 20px;
+}
+#search-container{
+    background-color: rgba(254, 254, 254, 0.9);
+    width: 400px;
+    height: 350px;
+    border-radius: 10px;
+    z-index: 4;
+    position: fixed;
+    top: 150px;
+    left: 50px;
+}
+#search-title{
+    padding-top: 20px;
+    padding-left: 20px;
+    font-size: 24px;
+    color: rgba(128,128,128);
+}
+#search-input{
+    margin-top: 20px;
+    margin-left: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    height: 36px;
+    width: 350px;
+    font-size: 18px;
+}
+#profile-container{
+    display: none;
+    z-index: 4;
+    background-color: #ffffff;
+    height: 240px;
+    width: 220px;
+    position: fixed;
+    top: 150px;
+    right: 50px;
+    background-color: rgba(254, 254, 254, 0.9);
+    border-radius: 10px;
+}
+.add-name{
+    padding-top: 20px;
+    font-size: 24px;
+    text-align: center;
+}
+.add-price{
+    padding-top: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+.order-button{
+    background-color: #5B5B5B;
+    color: #ffffff;
+    font-size: 20px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+.slider-container {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#priceValue{
+    font-size: 16px;
+    margin-left: 10px;
+}
+input[type="range"] {
+    cursor: pointer;
+    height: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    width: 75%;
+}
+#priceValue {
+  display: block;
+  margin-top: 10px;
+  font-size: 18px;
+}
+.distance-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.distance-button{
+    background-color: #ffffff;
+    color: #5B5B5B;
+    font-size: 20px;
+    width: 100px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+footer{
+    height: 10vh;
+    display: flex;
+    background-color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+.footer{
+    font-family:"Comic Sans MS" ;
+    z-index: 5;
+}
