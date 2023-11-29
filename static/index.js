@@ -98,7 +98,8 @@ function createMarker(){
         console.log('Network error:', error);
     })
 }
-
+let member_1_id;
+let member_2_id;
 function markerClick(){
     markers.forEach(marker => {
         marker.addListener('click', () => {
@@ -125,15 +126,19 @@ function markerClick(){
             talk_button.addEventListener('click',()=>{
                 if (marker.member_id<user_member_id){
                     room_id = marker.member_id + "-" + user_member_id;
+                    member_1_id = marker.member_id;
+                    member_2_id = user_member_id;
                 }
                 else if(marker.member_id>user_member_id){
                     room_id = user_member_id + "-" + marker.member_id;
+                    member_1_id = user_member_id;
+                    member_2_id = marker.member_id;
                 }
                 else
                     room_id = "";
                 data = {
-                    'user_id':user_member_id,
-                    'contact_id':marker.member_id,
+                    'member_1_id':member_1_id,
+                    'member_2_id':member_2_id,
                     'room_id':room_id
                 };
                 src = "/api/room";
@@ -145,7 +150,7 @@ function markerClick(){
                 })
                 .then(function(data) {
                     console.log(data);
-                     window.location="/message";
+                    window.location="/message";
                 })
                 .catch(error => {
                     console.log('Network error:', error);

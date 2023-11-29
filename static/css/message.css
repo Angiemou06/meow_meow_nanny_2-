@@ -27,6 +27,7 @@
 .namelist-container{
     display: flex;
     margin: 10px;
+    align-items: center;    
 }
 .namelist-container:hover {
     background-color: #cec9c9;

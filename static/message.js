@@ -2,9 +2,11 @@ let nickname;
 var socketio = io();
 let url = 'http://127.0.0.1';
 let port = '3000';
-socketio.connect(url + ':' + port);
 let user_member_id
 let contact_id
+let message = document.getElementById("message");
+let lastMessage;
+let send_button = document.getElementById("send-button");
 
 window.onload = async function () {
   await checkUserStatusandData();
@@ -31,40 +33,47 @@ async function checkUserStatusandData() {
         const data = await response.json();
 
         user_member_id = data["data"]["id"];
-        console.log(user_member_id);
-        // socketio.connect({ auth: { user_id: data["data"]["id"] } });
+        // socketio.connect(
+        //     url + ':' + port,
+        //     { 
+        //         query: {auth: { user_id: data["data"]["id"] } }
+        //     }
+        // );
     } catch (error) {
         console.log('Network error:', error);
     }
 }
 
-
 let name_list = document.getElementById("name-list");
 function createRoom(){
-    src = "/api/room";
+    src = `/api/room?id=${user_member_id}`;
     fetch(src,{method: "GET"})
     .then(function(response) {
         if (response) {
             return response.json();
         }
     })
-    .then(function(data) {
+    .then(async function(data) {
         for(let i=0; i<data["room_id"].length; i++){ 
-            contact_id = data["contact_id"][i];
+            contact_id = data["member_1_id"][i];
             if (user_member_id === contact_id){
-                contact_id = data["user_id"][i];
+                contact_id = data["member_2_id"][i];
+            }
+            let addNameListContainer = document.createElement("div");
+            addNameListContainer.className = "namelist-container";
+            addNameListContainer.id = data["room_id"][i];
+            name_list.appendChild(addNameListContainer);
+            if (i==0){
+                createChat(data["room_id"][i]);
             }
             url = `/api/memberData?id=${contact_id}`;
-            fetch(url,{method: "GET"})
+            await fetch(url,{method: "GET"})
             .then(function(response) {
                 if (response) {
                     return response.json();
                 }
             })
             .then(function(memberData) {
-                const addNameListContainer = document.createElement("div");
-                addNameListContainer.className = "namelist-container";
-                name_list.appendChild(addNameListContainer);
                 const addContactImg = document.createElement("img");
                 addContactImg.className = "contact-img";
                 addContactImg.src = memberData["shot"];
@@ -73,17 +82,34 @@ function createRoom(){
                 addContactName.className = "contact-name";
                 addContactName.innerHTML = memberData["nickname"];
                 addNameListContainer.appendChild(addContactName);
+                addNameListContainer.addEventListener('click',(event)=>{
+                    let clickedElementId = event.currentTarget.id;
+                    socketio.emit("join_chatroom", {
+                        "room_id":clickedElementId 
+                    });
+                })
             })
+        
         };
-    })        
+    })
+    .then(()=>{
+        let namelist_containers = document.querySelectorAll(".namelist-container");
+        namelist_containers.forEach(namelist_container => {
+            namelist_container.addEventListener('click',() => {
+                message.innerHTML = "";
+                createChat(namelist_container.id);
+            });
+        });
+    })      
     .catch(error => {
         console.log('Network error:', error);
     })
 }
 
+send_button.addEventListener('click',()=>{
+    sendMessage();
 
-let message = document.getElementById("message");
-
+});
 const createMessage = (id, msg) => {
     let content
     if (id === user_member_id){
@@ -112,16 +138,41 @@ const createMessage = (id, msg) => {
 };
 
 socketio.on("message", function(data) {
+    console.log(user_member_id + " : ");
+    console.log(data);
     createMessage(data["id"],data["data"]);
 });
 
 let text_input = document.getElementById("text-input");
+let roomId
+socketio.on("roomID", function(data) {
+    roomId = data["roomID"];
+});
 
 const sendMessage = () => {
     if (text_input.value == "") return;
-    socketio.emit("message", { data: text_input.value, id:user_member_id });
+    socketio.emit("message", { "data": text_input.value, "id":user_member_id,"roomId":roomId });
     text_input.value = "";
 };
+
+function createChat(room_id){
+    src = `/api/chatMessage?roomId=${room_id}`;
+    fetch(src,{method: "GET"})
+    .then(function(response) {
+        if (response) {
+            return response.json();
+        }
+    })
+    .then(function(data) {
+        for(i=0;i<data["message"].length;i++){
+            createMessage(data["sender_id"][i],data["message"][i]);
+        }
+    })
+    .catch(error => {
+        console.log('Network error:', error);
+    });
+}
+
 
 const title = document.getElementById("title");
 title.addEventListener('click',() => {

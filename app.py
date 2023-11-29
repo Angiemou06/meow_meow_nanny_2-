@@ -44,8 +44,10 @@ def connect_to_database():
         connection = connection_pool.get_connection()
         cursor = connection.cursor()
         return connection, cursor
-    except:
+    except Exception as e:
+        print(f"Error connecting to database: {e}")
         return None, None
+    
 #  建立member table
 # con, cursor = connect_to_database()
 # cursor.execute(
@@ -73,14 +75,14 @@ def connect_to_database():
 # 建立 room table
 # con, cursor = connect_to_database()
 # cursor.execute(
-#     "CREATE TABLE room(id INT PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, contact_id INT NOT NULL, room_id VARCHAR(100) NOT NULL)")
+#     "CREATE TABLE room(id INT PRIMARY KEY AUTO_INCREMENT, member_1_id INT NOT NULL, member_2_id INT NOT NULL, room_id VARCHAR(100) NOT NULL)")
 # con.commit()
 # cursor.close()
 # con.close()
 
 # test table
 # con, cursor = connect_to_database()
-# cursor.execute("DROP TABLE message")
+# cursor.execute("DROP TABLE room")
 # con.commit()
 # cursor.close()
 # con.close()
@@ -314,13 +316,13 @@ def getPosition():
             con, cursor = connect_to_database()
             cursor.execute("SELECT nickname FROM member WHERE id = %s",(member_id,))
             member_nickname = cursor.fetchone()
+            cursor.close()
+            con.close()
             nickname_list.append(member_nickname[0])
             id_list.append(information[i][0])
             lat_list.append(information[i][2])
             lng_list.append(information[i][3])
             price_list.append(information[i][4]) 
-            cursor.close()
-            con.close()
             data = {
                 "id":id_list,
                 "member_id":member_id_list,
@@ -353,8 +355,8 @@ def positionFilter():
 def room():
     if request.method == "POST":
         data = request.get_json()
-        user_id = data["user_id"]
-        contact_id = data["contact_id"]
+        member_1_id = data["member_1_id"]
+        member_2_id = data["member_2_id"]
         room_id = data["room_id"]
         con, cursor = connect_to_database()
         cursor.execute("SELECT room_id FROM room WHERE room_id = %s", (room_id,))
@@ -362,31 +364,32 @@ def room():
         cursor.close()
         con.close()
         if existing_room:
-            return jsonify({"error": "房間已存在"}), 400
+            return jsonify({"error": True, "message": "房間已存在"}), 400
         else:
             con, cursor = connect_to_database()
             cursor.execute(
-                "INSERT INTO room(user_id,contact_id,room_id) VALUES (%s,%s,%s)", (user_id,contact_id,room_id))
+                "INSERT INTO room(member_1_id,member_2_id,room_id) VALUES (%s,%s,%s)", (member_1_id,member_2_id,room_id))
             con.commit()
             cursor.close()
             con.close()
             return jsonify({"ok": True}), 200
     else:
+        member_id = request.args.get('id')
         con, cursor = connect_to_database()
-        cursor.execute("SELECT * FROM room")
+        cursor.execute("SELECT * FROM room  WHERE member_1_id=%s OR member_2_id = %s", (member_id, member_id))
         existing = cursor.fetchall()
         cursor.close()
         con.close()
-        user_id_list=[]
-        contact_id_list=[]
+        member_1_id=[]
+        member_2_id=[]
         room_id_list=[]
         for i in range(0,len(existing)):
-            user_id_list.append(existing[i][1])
-            contact_id_list.append(existing[i][2])
+            member_1_id.append(existing[i][1])
+            member_2_id.append(existing[i][2])
             room_id_list.append(existing[i][3])
         data = {
-            'user_id':user_id_list,
-            'contact_id':contact_id_list,
+            'member_1_id':member_1_id,
+            'member_2_id':member_2_id,
             'room_id':room_id_list
         }
         return jsonify(data), 200
@@ -454,28 +457,76 @@ def memberData():
     except:
         return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
 
-@socketio.on("connect")
-def connect(auth):
-    user_id = auth
-    print(user_id)
-    con, cursor = connect_to_database()
-    cursor.execute("SELECT room_id FROM room WHERE user_id=%s OR contact_id = %s", (user_id, user_id))
-    existing_rooms = cursor.fetchall()
-    print(existing_rooms)
-    cursor.close()
-    con.close()
-    for i in range(0,len(existing_rooms)):
-        room = existing_rooms[i][0]
-        join_room(room)
+# @socketio.on("connect")
+# def connect(auth):
+    # print(auth)
+    # user_id = auth
+    # print(user_id)
+    # con, cursor = connect_to_database()
+    # cursor.execute("SELECT room_id FROM room WHERE user_id=%s OR contact_id = %s", (user_id, user_id))
+    # existing_rooms = cursor.fetchall()
+    # print(existing_rooms)
+    # cursor.close()
+    # con.close()
+    # for i in range(0,len(existing_rooms)):
+    #     room = existing_rooms[i][0]
+    #     join_room(room)
+
+@socketio.on('join_chatroom')
+def join_chatroom(data):
+    try:
+        room_id = data["room_id"]
+        numbers = room_id.split('-')
+        member_1_id = numbers[0]
+        member_2_id = numbers[1]
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT room_id FROM room WHERE member_1_id=%s AND member_2_id = %s", (member_1_id, member_2_id))
+        existing_rooms = cursor.fetchone()
+        cursor.close()
+        con.close()
+        join_room(existing_rooms[0])
+        socketio.emit("roomID", {'roomID': existing_rooms[0]})
+    except:
+        print("cursor: None")
+
 
 @socketio.on('message')
 def handle_message(data):
     received_message = data.get('data')
     received_id = data.get('id')
-    print(str(received_id) + 'received message: ' + received_message)
+    roomId = data.get('roomId')
+    print(str(received_id) + ' received message: ' + received_message)
+    print("roomId:"+roomId)
+    con, cursor = connect_to_database()
+    cursor.execute("INSERT INTO message(room_id,sender_id,message) VALUES (%s,%s,%s)", (roomId,received_id,received_message))
+    con.commit()
+    cursor.close()
+    con.close()
+    socketio.emit('message', {'data': received_message,'id':received_id},to=roomId)
 
-    socketio.emit('message', {'data': received_message,'id':received_id})
-
+@app.route("/api/chatMessage", methods=["GET"])
+def chatMessage():
+    roomId = request.args.get('roomId')
+    print("chatMessage:"+roomId)
+    try:
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT sender_id,message FROM message WHERE room_id = %s", (roomId,))
+        existing_message = cursor.fetchall()
+        cursor.close()
+        con.close()
+        sender_id_list=[]
+        message_list=[]
+        for i in range(0,len(existing_message)):
+            sender_id_list.append(existing_message[i][0])
+            message_list.append(existing_message[i][1])
+        data = {
+            "sender_id":sender_id_list,
+            "message":message_list
+        }
+        return (data) ,200
+    except:
+        return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
+    
 if __name__ == '__main__':
     socketio.run(app,port=3000,debug=True)
 
