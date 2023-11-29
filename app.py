@@ -528,5 +528,5 @@ def chatMessage():
         return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
     
 if __name__ == '__main__':
-    socketio.run(app,port=3000,debug=True)
+    socketio.run(app,port=3000,debug=False)
 
