@@ -33,10 +33,10 @@ function initMap(){
     });
 }
 function search() {
-     const autoComplete = new google.maps.places.Autocomplete(
+    const autoComplete = new google.maps.places.Autocomplete(
         document.getElementById('search-input'),
         {
-            types: ['address'],
+            componentRestrictions: { country: 'tw' }
         }
     );
 

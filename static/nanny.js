@@ -41,7 +41,7 @@ function profileSearch() {
      const autoComplete = new google.maps.places.Autocomplete(
         profile_search_input,
         {
-            types: ['address'],
+            componentRestrictions: { country: 'tw' }
         }
     );
     autoComplete.addListener('place_changed', function () {
