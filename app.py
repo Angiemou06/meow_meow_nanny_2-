@@ -460,21 +460,6 @@ def memberData():
     except:
         return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
 
-# @socketio.on("connect")
-# def connect(auth):
-    # print(auth)
-    # user_id = auth
-    # print(user_id)
-    # con, cursor = connect_to_database()
-    # cursor.execute("SELECT room_id FROM room WHERE user_id=%s OR contact_id = %s", (user_id, user_id))
-    # existing_rooms = cursor.fetchall()
-    # print(existing_rooms)
-    # cursor.close()
-    # con.close()
-    # for i in range(0,len(existing_rooms)):
-    #     room = existing_rooms[i][0]
-    #     join_room(room)
-
 @socketio.on('join_chatroom')
 def join_chatroom(data):
     try:
@@ -532,5 +517,5 @@ def chatMessage():
     
 if __name__ == '__main__':
     CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-    socketio.run(app,host="0.0.0.0",port=3000,debug=False)
+    socketio.run(app,host="0.0.0.0",port=3000,debug=True)
 

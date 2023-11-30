@@ -7,6 +7,8 @@ let contact_id
 let message = document.getElementById("message");
 let lastMessage;
 let send_button = document.getElementById("send-button");
+let roomId;
+let ct=0;
 
 window.onload = async function () {
   await checkUserStatusandData();
@@ -65,6 +67,7 @@ function createRoom(){
             name_list.appendChild(addNameListContainer);
             if (i==0){
                 createChat(data["room_id"][i]);
+                roomId = data["room_id"][i];
             }
             url = `/api/memberData?id=${contact_id}`;
             await fetch(url,{method: "GET"})
@@ -84,9 +87,14 @@ function createRoom(){
                 addNameListContainer.appendChild(addContactName);
                 addNameListContainer.addEventListener('click',(event)=>{
                     let clickedElementId = event.currentTarget.id;
-                    socketio.emit("join_chatroom", {
-                        "room_id":clickedElementId 
-                    });
+                    if (clickedElementId){
+                        socketio.emit("join_chatroom", {
+                            "room_id":clickedElementId 
+                        });
+                    }
+                    else{
+                        alert("請點選對話對象");
+                    }  
                 })
             })
         
@@ -137,6 +145,7 @@ const createMessage = (id, msg) => {
     message.innerHTML += content;
 };
 
+
 socketio.on("message", function(data) {
     console.log(user_member_id + " : ");
     console.log(data);
@@ -144,14 +153,23 @@ socketio.on("message", function(data) {
 });
 
 let text_input = document.getElementById("text-input");
-let roomId
+
 socketio.on("roomID", function(data) {
     roomId = data["roomID"];
 });
 
 const sendMessage = () => {
     if (text_input.value == "") return;
-    socketio.emit("message", { "data": text_input.value, "id":user_member_id,"roomId":roomId });
+    if (roomId){
+        socketio.emit("message", { "data": text_input.value, "id":user_member_id,"roomId":roomId });
+        if (ct==0){
+            createMessage(user_member_id,text_input.value);
+            ct++;
+        }
+    }
+    else{
+        alert("請點選對話對象");
+    }
     text_input.value = "";
 };
 
