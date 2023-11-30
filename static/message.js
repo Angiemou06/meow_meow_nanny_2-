@@ -8,6 +8,7 @@ let message = document.getElementById("message");
 let lastMessage;
 let send_button = document.getElementById("send-button");
 let roomId;
+let clickMember;
 let ct=0;
 
 window.onload = async function () {
@@ -68,7 +69,11 @@ function createRoom(){
             if (i==0){
                 createChat(data["room_id"][i]);
                 roomId = data["room_id"][i];
-            }
+                clickMember = document.getElementById(data["room_id"][i]);
+                clickMember.addEventListener('click',()=>{
+                    ct = 1;
+                });
+            };
             url = `/api/memberData?id=${contact_id}`;
             await fetch(url,{method: "GET"})
             .then(function(response) {
@@ -164,7 +169,6 @@ const sendMessage = () => {
         socketio.emit("message", { "data": text_input.value, "id":user_member_id,"roomId":roomId });
         if (ct==0){
             createMessage(user_member_id,text_input.value);
-            ct++;
         }
     }
     else{
