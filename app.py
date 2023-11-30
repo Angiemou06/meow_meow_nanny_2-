@@ -26,6 +26,8 @@ secret_key = "key123"
 from dotenv import load_dotenv
 load_dotenv()
 from flask_socketio import join_room, leave_room, send, SocketIO
+from flask_cors import CORS
+
 
 db_config = {
     "pool_name": os.getenv("DB_POOL_NAME"),
@@ -86,7 +88,7 @@ def connect_to_database():
 # con.commit()
 # cursor.close()
 # con.close()
-# cursor.execute("SELECT * FROM member")
+# cursor.execute("SELECT * FROM message")
 # data = cursor.fetchall()
 # print(data)
 
@@ -96,7 +98,8 @@ def allowed_file(filename):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 
 
 @app.route("/")
@@ -528,5 +531,6 @@ def chatMessage():
         return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
     
 if __name__ == '__main__':
-    socketio.run(app,host="0.0.0.0",port=3000,debug=False)
+    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+    socketio.run(app,host="0.0.0.0",port=3000,debug=True)
 
