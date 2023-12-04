@@ -27,7 +27,6 @@ from dotenv import load_dotenv
 load_dotenv()
 from flask_socketio import join_room, leave_room, send, SocketIO
 from flask_cors import CORS
-from datetime import datetime
 
 
 db_config = {
@@ -190,6 +189,7 @@ def signin():
         cursor.close()
         con.close()
         if existing_user:
+            print("hi123")
             payload = {
                 'id': existing_user[0],
                 'name': existing_user[1],
