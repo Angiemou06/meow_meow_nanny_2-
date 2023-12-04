@@ -167,6 +167,21 @@ function daleteLocation(buttonId) {
         });
 };
 
+price_buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        button.style.backgroundColor="#5B5B5B";
+        button.style.color="#ffffff";
+        price = parseInt(button.id);
+        // 其他按鈕恢復正常
+        price_buttons.forEach(otherButton => {
+                if (otherButton !== button) {
+                    otherButton.style.backgroundColor = "#ffffff";
+                    otherButton.style.color = "#000000";
+                }
+            });
+    })      
+});
+
 const title = document.getElementById("title");
 title.addEventListener('click',() => {
     window.location="/index";
@@ -197,22 +212,12 @@ function logOut(){
     window.location="/";
 }
 
+const booking_button =document.getElementById("booking-button");
+booking_button.addEventListener('click',() =>{
+    window.location="/booking";
+});
+
 const nanny_button = document.getElementById("nanny-button");
 nanny_button.addEventListener('click', () => {
     window.location="/nanny";
-});
-
-price_buttons.forEach(button => {
-    button.addEventListener('click', () => {
-        button.style.backgroundColor="#5B5B5B";
-        button.style.color="#ffffff";
-        price = parseInt(button.id);
-        // 其他按鈕恢復正常
-        price_buttons.forEach(otherButton => {
-                if (otherButton !== button) {
-                    otherButton.style.backgroundColor = "#ffffff";
-                    otherButton.style.color = "#000000";
-                }
-            });
-    })      
 });

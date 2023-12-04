@@ -14,6 +14,7 @@
         </div>
         <div id="title-sub-container">
             <button class="sub-title" id="order-button">訂單</button>
+            <button class="sub-title" id="booking-button">預約</button>
             <button class="sub-title" id="message-button">訊息</button>
             <button class="sub-title" id="nanny-button">成為nanny</button>
             <button class="sub-title" id="log-out">登出</button>
@@ -21,13 +22,80 @@
         </div> 
     </div>
     <div class="main">
-
+        <div class="order-container">
+            <div class="button-container">
+                <div class="btn-container">
+                    <hr class="btn-hr" id="hr1">
+                    <button class="btn btn1" id="btn1">代付款訂單</button>
+                </div>
+                <div class="btn-container">
+                    <hr class="btn-hr" id="hr2">
+                    <button class="btn btn2" id="btn2">歷史訂單</button>
+                </div>
+                <!-- <div class="btn-container">
+                    <hr class="btn-hr">
+                    <button class="btn btn3" id="btn3">我的客戶</button>
+                </div> -->
+            </div>
+            <div class="order-detail-container" id="order-detail-container">
+                <div class="order-sub-detail-container" id="order-sub-detail-container">
+                    <div class="hello" id="hello"></div>
+                    <div class="order-detail" id="order-detail">
+                    </div>
+                    <div class="hello2">
+                        若上述訂單內容無誤，請進行資料填寫及付款：
+                    </div>
+                    <div class="connect-container">
+                        <div class="name-div">
+                            <div>
+                                聯絡人姓名：
+                            </div>
+                            <input class="name-input" id="name-input">
+                        </div>
+                        <div class="phone-div">
+                            <div>
+                                聯絡人電話：
+                            </div>
+                            <input class="name-input" id="phone-input">
+                        </div>
+                        <div class="address-div">
+                            <div>
+                                實際服務地址：
+                            </div>
+                            <input class="address-input" id="address-input">
+                        </div>
+                    </div>
+                    <div class="hello2">
+                        信用卡付款資訊：
+                    </div>
+                    <div class="pay-container">
+                        <div class="card-number-div">
+                            <div>卡片號碼：</div>
+                            <div class="card-number-input" id="card-number-input"></div>
+                        </div>
+                        <div class="card-day-div">
+                            <div>過期日期：</div>
+                            <div class="card-day-input" id="card-day-input"></div>
+                        </div>
+                        <div class="card-ccv-div">
+                            <div>後三碼：</div>
+                            <div class="card-ccv-input" id="card-ccv-input"></div>
+                        </div>
+                        <button class="pay-button" id="pay-button">確認訂單並付款</button>
+                    </div>
+                </div>
+                <div class="success-pay" id="success-pay">
+                    付款成功，訂單已建立，請至歷史訂單確認。
+                </div>
+            </div>
+        </div>
     </div>
     <footer>
         <div class="footer">
             Copyright © 2023 meow meow nanny. All rights reserved.
         </div>
     </footer>
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
     <script src="../static/order.js"></script>
 </body>
 </html>

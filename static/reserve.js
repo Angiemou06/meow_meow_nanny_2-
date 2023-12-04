@@ -1,53 +1,13 @@
-let nickname_submit = document.getElementById("nickname-submit");
-let nickname_input = document.getElementById("nickname-input");
-let email_input = document.getElementById("email-input");
-let email_submit = document.getElementById("email-submit");
-let intro_input = document.getElementById("intro-input");
-let intro_submit = document.getElementById("intro-submit");
-let profile_picture = document.getElementById("profile-picture");
-let user_member_id
-
-nickname_submit.addEventListener('click',()=>{
-    reviseMemberData();
-});
-email_submit.addEventListener('click',()=>{
-    reviseMemberData();
-});
-intro_submit.addEventListener('click',()=>{
-    reviseMemberData();
-});
-
-function reviseMemberData(){
-    src = "/api/memberData";
-    data = {
-        "id":user_member_id,
-        "nickname":nickname_input.value,
-        "email":email_input.value,
-        "introduction":intro_input.value
-    }
-    fetch(src,{method: "POST",headers: {'Content-Type': 'application/json'},body: JSON.stringify(data)})
-    .then(function(response) {
-        if (response) {
-            return response.json();
-        }
-    })
-    .then(function(data) {
-        console.log(data)
-        nickname_input.value="";
-        email_input.value="";
-        intro_input.value="";
-        location.reload();
-    })
-    .catch(error => {
-        console.log('Network error:', error);
-    });
-}
+let dateStart = document.getElementById("dateStart");
+let dateEnd = document.getElementById("dateEnd");
+let time = document.getElementsByName("time");
+const orderButton = document.getElementById("order-submit-button");
+let orderTime;
+let user_member_id;
 
 window.onload = async function () {
     await checkUserStatusandData();
-    getMemberData();
-}
-
+};
 async function checkUserStatusandData() {
     try {
         const jwtToken = localStorage.getItem('Token');
@@ -59,35 +19,69 @@ async function checkUserStatusandData() {
             method: "GET",
             headers: header
         });
-
         if (!response.ok) {
             window.location.href = "/";
             return;
         }
-
         const data = await response.json();
-
         user_member_id = data["data"]["id"];
     } catch (error) {
         console.log('Network error:', error);
     }
 }
 
-function getMemberData(){
-    url = `/api/memberData?id=${user_member_id}`;
-    fetch(url,{method: "GET"})
+let today = new Date();
+let dd = String(today.getDate()).padStart(2, '0');
+let mm = String(today.getMonth() + 1).padStart(2, '0');
+let yyyy = today.getFullYear();
+today = yyyy + '-' + mm + '-' + dd;
+document.getElementById("dateStart").min = today;
+
+orderButton.addEventListener('click',()=>{
+    if (dateStart.value == ""){
+        alert("請選擇開始日期");
+        return
+    }
+    else if (dateEnd.value == ""){
+        alert("請選擇結束日期");
+        return
+    }
+    else if (dateEnd.value < dateStart.value){
+        alert("結束日期不得早於開始日期");
+        return
+    }
+    time.forEach(element=>{
+        if (element.checked){
+            orderTime = element.value;
+        }
+    })
+    data = {
+        "memberID":user_member_id,
+        "nannyID":nannyID,
+        "dateStart":dateStart.value,
+        "dateEnd":dateEnd.value,
+        "time":orderTime,
+        "price":price,
+        "lat":lat,
+        "lng":lng
+    }
+    src = "/api/booking"
+    fetch(src,{method: "POST",headers: {'Content-Type': 'application/json'},body: JSON.stringify(data)})
     .then(function(response) {
         if (response) {
             return response.json();
         }
     })
-    .then(function(data){
-        email_input.placeholder = data["email"];
-        intro_input.placeholder = data["introduction"];
-        nickname_input.placeholder = data["nickname"];
-        profile_picture.src = data["shot"];
+    .then(function(data) {
+        if (data["ok"]== true){
+            window.location="/booking";
+        }
+        else if (data["ok"]== false){
+            alert("須先取消原先預約才可再進行其他預約")
+            return
+        }
     })
-}
+});
 
 const title = document.getElementById("title");
 title.addEventListener('click',() => {

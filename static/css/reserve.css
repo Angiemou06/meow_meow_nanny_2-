@@ -1,0 +1,157 @@
+.main{
+    margin-top: 10vh;
+    height: 80vh;
+    background-color: rgb(240, 239, 239);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+footer{
+    height: 10vh;
+    display: flex;
+    background-color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+.footer{
+    font-family:"Comic Sans MS" ;
+    z-index: 5;
+}
+.profile-container{
+    width: 50vw;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.order-container{
+    width: 50vw;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile{
+    width: 85%;
+    height: 80%;
+    overflow-y: auto;
+    background-color: rgba(128,128,128,0.4);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+.picture-container{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #000000;
+    position: absolute;
+    transform: translateY(15%);
+}
+.picture{
+    object-fit: cover;
+    width: 150px;
+    width: 150px;
+}
+.nickname{
+    position: absolute;
+    top: 190px;
+    font-size: 20px;
+    font-weight: 700;
+}
+.introduction{
+    position: absolute;
+    top: 240px;
+    font-size: 20px;
+    font-weight: 500;
+    width: 80%;
+}
+.order{
+    width: 85%;
+    height: 80%;
+    overflow-y: auto;
+    background-color: rgba(128,128,128,0.4);
+    border-radius: 15px;
+    justify-content: center;
+    position: relative;
+}
+.order-title{
+    font-size: 26px;
+    font-weight: 800;
+    position: absolute;
+    top:20px;
+    left: 10%;
+}
+.start-time-title{
+    font-size: 20px;
+    font-weight: 700;
+    position: absolute;
+    top:80px;
+    left: 10%;
+}
+.dateStart{
+    position: absolute;
+    top:120px;
+    left: 10%;
+    height: 40px;
+    width: 400px;
+}
+.end-time-title{
+    font-size: 20px;
+    font-weight: 700;
+    position: absolute;
+    top:180px;
+    left: 10%;
+}
+.dateEnd{
+    position: absolute;
+    top:220px;
+    left: 10%;
+    height: 40px;
+    width: 400px;
+}
+.time-title{
+    position: absolute;
+    top:280px;
+    left: 10%;
+    font-size: 20px;
+    font-weight: 700;
+}
+.morning{
+    position: absolute;
+    top:320px;
+    left: 10%;
+    font-size: 18px;
+    font-weight: 400;
+}
+.night{
+    position: absolute;
+    top:320px;
+    left: 30%;
+    font-size: 18px;
+    font-weight: 400;
+}
+.price-title{
+    position: absolute;
+    top:360px;
+    left: 10%;
+    font-size: 20px;
+    font-weight: 700;
+}
+.price-sub-title{
+    position: absolute;
+    top:400px;
+    left: 10%;
+    font-size: 18px;
+    font-weight: 400;
+}
+.order-button{
+    position: absolute;
+    top:440px;
+    left: 45%;
+    font-size: 18px;
+    font-weight: 400;
+}

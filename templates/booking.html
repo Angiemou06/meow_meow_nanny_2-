@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>meow meow nanny</title>
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/booking.css">
 </head>
 <body>
     <div id="header">
@@ -19,36 +20,27 @@
             <button class="sub-title" id="log-out">登出</button>
             <button id="user-logo"></button>
         </div> 
-        
     </div>
-    <div id="search-container">
-        <div id="search-title">搜尋地點</div>
-        <input id="search-input" placeholder="請輸入搜尋地點位置"/>
-        <div id="search-title">價格</div>
-        <div class="slider-container">
-            <input type="range" id="priceRange" min="200" max="600" step="100" value="200">
-            <span id="priceValue">$200元/次</span>
+    <div class="main">
+        <div class="top-zone">
+            <button class="btn button-1" id="btn1">
+                邀請列表
+                <hr class="btn-hr" id="btn1-line">
+            </button>
+            <button class="btn button-2" id="btn2">
+                客戶列表
+                <hr class="btn-hr" id="btn2-line">
+            </button>
         </div>
-        <div id="search-title">距離</div>
-        <div class="distance-container">
-            <button id="1000" class="distance-button">1Km內</button>
-            <button id="2000" class="distance-button">2Km內</button>
-            <button id="3000" class="distance-button">3Km內</button>
-        </div>
-    </div>
-    <div id="map" style="height: 90vh;">
-    </div>
-    <div id="profile-container">
+        <div class="container" id="container">
 
+        </div>
     </div>
     <footer>
         <div class="footer">
             Copyright © 2023 meow meow nanny. All rights reserved.
         </div>
     </footer>
-    <script src="../static/index.js"></script>
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwe1b3XpisrWPZlRh-pqe5nB63d9_Z7Mo&libraries=geometry,places&callback=initMap">
-    </script>
+    <script src="../static/booking.js"></script>
 </body>
 </html>

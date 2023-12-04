@@ -226,6 +226,11 @@ function logOut(){
     window.location="/";
 }
 
+const booking_button =document.getElementById("booking-button");
+booking_button.addEventListener('click',() =>{
+    window.location="/booking";
+});
+
 const nanny_button = document.getElementById("nanny-button");
 nanny_button.addEventListener('click', () => {
     window.location="/nanny";

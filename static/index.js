@@ -88,7 +88,8 @@ function createMarker(){
                 title: point_nickname,
                 member_id:data["member_id"][index],
                 id:data["id"][index],
-                price: data["price"][index]
+                price: data["price"][index],
+                member_id:data["member_id"][index]
             });
             markers.push(marker);
         });
@@ -103,6 +104,7 @@ let member_2_id;
 function markerClick(){
     markers.forEach(marker => {
         marker.addListener('click', () => {
+            console.log(marker);
             const profile_container = document.getElementById("profile-container");
             profile_container.style.display="none";
             profile_container.innerHTML="";
@@ -119,6 +121,10 @@ function markerClick(){
             order_button.innerHTML="預約"
             order_button.className = "order-button";
             profile_container.appendChild(order_button);
+            order_button.addEventListener('click',()=>{
+                console.log(marker.position.lat)
+                window.location.href=' /reserve?id='+marker.member_id+"&price="+marker.price+"&lat="+marker.getPosition().lat()+"&lng="+marker.getPosition().lng();
+            });
             const talk_button = document.createElement('button');
             talk_button.innerHTML="對談"
             talk_button.className = "order-button";
@@ -191,6 +197,16 @@ function logOut(){
     localStorage.removeItem('Token');
     window.location="/";
 }
+
+const booking_button =document.getElementById("booking-button");
+booking_button.addEventListener('click',() =>{
+    window.location="/booking";
+});
+
+const nanny_button = document.getElementById("nanny-button");
+nanny_button.addEventListener('click', () => {
+    window.location="/nanny";
+});
 
 document.addEventListener('DOMContentLoaded', function () {
   const priceValue = document.getElementById('priceValue');

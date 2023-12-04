@@ -2,8 +2,283 @@
     margin-top: 10vh;
     height: 80vh;
     background-color: rgb(240, 239, 239);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+.order-container{
+    width: 90%;
+    height: 60vh;
+    display: flex;
+}
+.button-container{
+    width: 15%;
+    height: 60vh;
+}
+.order-detail-container{
+     width: 85%;
+     height: 60vh;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+.order-sub-detail-container{
+    width: 80%;
+    height: 100%;
+    overflow-y: auto;
+    display: none;
+}
+.btn{
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    background: none;
+    cursor: pointer;
+    font-size: 20px;
+    height: 50px;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+.btn:hover {
+    color: #ef9782;
+}
+.btn-hr{
+    height: 24px;
+    border: 2px solid #ef9782;
+    visibility:hidden;
+}
+.btn-container{
+    width: 100%;
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+}
+.hello{
+    font-size: 16px;
+    font-weight: 500;
+}
+.order-detail{
+    margin-top: 10px;
+    height: 185px;
+    width: 99%;
+    border: 1px solid #6f6e6e;
+    border-radius: 15px; 
+    position: relative;
+}
+.nanny-name{
+    font-size: 16px;
+    font-weight: 500;
+    position: absolute;
+    top:20px;
+    left: 20px;
+}
+.start-date{
+    font-size: 16px;
+    font-weight: 500;
+    position: absolute;
+    top:50px;
+    left: 20px;
+}
+.end-date{
+    font-size: 16px;
+    font-weight: 500;
+    position: absolute;
+    top:80px;
+    left: 20px;
+}
+.diff-day-div{
+    font-size: 16px;
+    font-weight: 700;
+    position: absolute;
+    top:140px;
+    left: 20px;
+}
+.time{
+    font-size: 16px;
+    font-weight: 500;
+    position: absolute;
+    top:110px;
+    left: 20px;
+}
+.cancel-button{
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute;
+    top:20px;
+    right: 20px;
+}
+.cancel-button:hover {
+    color: #ef9782;
+}
+.hello2{
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+.connect-container{
+    height: 155px;
+    width: 99%;
+    margin-top: 10px;
+    border: 1px solid #6f6e6e;
+    border-radius: 15px; 
+    position: relative;
+}
+.pay-container{
+    height: 155px;
+    width: 99%;
+    margin-top: 10px;
+    border: 1px solid #6f6e6e;
+    border-radius: 15px; 
+    position: relative;
+}
+.name-div{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.phone-div{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.address-div{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.name-input{
+    margin-left: 10px;
+    width: 150px;
+    height: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #918b8b;
+    background: var(--White, #FFF);
+    font-size: 16px;
+}
+.address-input{
+    margin-left: 10px;
+    width: 400px;
+    font-size: 16px;
+    height: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #918b8b;
+    background: var(--White, #FFF);
+}
+.hello3{
+    margin-top: 395px;
+    font-size: 16px;
+    font-weight: 500;
+}
+.card-number-div{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.card-number-input{
+    margin-left: 10px;
+    width: 150px;
+    height: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #918b8b;
+    background: var(--White, #FFF);
+    font-size: 16px;
+}
+.card-day-div{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.card-day-input{
+    margin-left: 10px;
+    width: 150px;
+    height: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #918b8b;
+    background: var(--White, #FFF);
+    font-size: 16px;
+}
+.card-ccv-div{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.card-ccv-input{
+    margin-left: 10px;
+    width: 150px;
+    height: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #918b8b;
+    background: var(--White, #FFF);
+    font-size: 16px;
+}
+.pay-button{
+    position: absolute;
+    bottom:20px;
+    right: 40px;
+    cursor: pointer;
+    font-size: 18px;
 
+}
+.pay-button:hover {
+    color: #ef9782;
+}
+.success-pay{
+    font-size: 24px;
+    font-weight: 700;
+    color: #ef9782;
+    display: none;
+}
+.container{
+    position: absolute;
+    height: 100px;
+    width: 800px;
+    border: 1px solid #ef9782;
+}
+.img-container{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #000000;
+}
+.img{
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+}
+.nanny-name-2{
+    position: relative;
+    top:10px;
+    left:120px;
+    font-weight: 700;
+}
+.order-price{
+    position: relative;
+    top:20px;
+    left:120px;
+    font-weight: 500;
+}
+.order-status{
+    position: relative;
+    top:30px;
+    left:120px;
+    font-weight: 500;
+}
 footer{
     height: 10vh;
     display: flex;

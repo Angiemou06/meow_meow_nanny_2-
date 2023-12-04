@@ -27,6 +27,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from flask_socketio import join_room, leave_room, send, SocketIO
 from flask_cors import CORS
+from datetime import datetime
 
 
 db_config = {
@@ -82,13 +83,27 @@ def connect_to_database():
 # cursor.close()
 # con.close()
 
-# test table
+# 建立 booking table
 # con, cursor = connect_to_database()
-# cursor.execute("DROP TABLE room")
+# cursor.execute("CREATE TABLE booking(id INT PRIMARY KEY AUTO_INCREMENT, startDate DATE NOT NULL, endDate DATE NOT NULL, time VARCHAR(10), checked INT NOT NULL DEFAULT 0, paid INT NOT NULL DEFAULT 0, reserver_id INT NOT NULL, nanny_id INT NOT NULL,price INT NOT NULL ,lat DOUBLE NOT NULL, lng DOUBLE NOT NULL)")
 # con.commit()
 # cursor.close()
 # con.close()
-# cursor.execute("SELECT * FROM message")
+
+# 建立 order table
+# con, cursor = connect_to_database()
+# cursor.execute("CREATE TABLE `order`(id INT PRIMARY KEY AUTO_INCREMENT, orderDate DATE NOT NULL, orderPrice INT NOT NULL, nanny_id INT NOT NULL, reserver_id INT NOT NULL,address VARCHAR(100),phoneNumber VARCHAR(20), contactName VARCHAR(10))")
+# con.commit()
+# cursor.close()
+# con.close()
+
+# test table
+# con, cursor = connect_to_database()
+# cursor.execute("DROP TABLE `order`")
+# con.commit()
+# cursor.close()
+# con.close()
+# cursor.execute("SELECT * FROM booking")
 # data = cursor.fetchall()
 # print(data)
 
@@ -99,8 +114,6 @@ def allowed_file(filename):
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app, cors_allowed_origins="*")
-
-
 
 @app.route("/")
 def home():
@@ -120,6 +133,9 @@ def order():
 @app.route("/nanny")
 def nanny():
     return render_template("nanny.html")
+@app.route("/booking")
+def bookingRoute():
+    return render_template("booking.html")
 
 @app.route("/api/user", methods=["POST"])
 def signup():
@@ -149,7 +165,6 @@ def signup():
             con.close()
             if (existing_user):
                 return jsonify({"error": True, "message": "此身分證字號已被註冊"}), 400
-            
             con, cursor = connect_to_database()
             cursor.execute(
             "INSERT INTO member(name,birthday,user_id,email,password,nickname) VALUES (%s,%s,%s,%s,%s,%s)", (name,birthday,user_id,email,password,nickname))
@@ -318,14 +333,14 @@ def getPosition():
             member_id_list.append(member_id)
             con, cursor = connect_to_database()
             cursor.execute("SELECT nickname FROM member WHERE id = %s",(member_id,))
-            member_nickname = cursor.fetchone()
+            member_data = cursor.fetchone()
             cursor.close()
             con.close()
-            nickname_list.append(member_nickname[0])
+            nickname_list.append(member_data[0])
             id_list.append(information[i][0])
             lat_list.append(information[i][2])
             lng_list.append(information[i][3])
-            price_list.append(information[i][4]) 
+            price_list.append(information[i][4])
             data = {
                 "id":id_list,
                 "member_id":member_id_list,
@@ -446,15 +461,16 @@ def memberData():
         else:
             contact_id = request.args.get('id')
             con, cursor = connect_to_database()
-            cursor.execute("SELECT nickname, shot, introduction,email FROM member WHERE id = %s",(contact_id,))
+            cursor.execute("SELECT id, nickname, shot, introduction,email FROM member WHERE id = %s",(contact_id,))
             existing_contact = cursor.fetchone()
             cursor.close()
             con.close()
             data = {
-                "nickname":existing_contact[0],
-                "shot":existing_contact[1],
-                "introduction":existing_contact[2],
-                "email":existing_contact[3]
+                "id":existing_contact[0],
+                "nickname":existing_contact[1],
+                "shot":existing_contact[2],
+                "introduction":existing_contact[3],
+                "email":existing_contact[4]
             }
         return jsonify(data), 200
     except:
@@ -514,8 +530,195 @@ def chatMessage():
         return (data) ,200
     except:
         return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
-    
+@app.route("/reserve")
+def reserve():
+    try:
+        id = request.args.get('id')
+        price = request.args.get('price')
+        lat = request.args.get('lat')
+        lng = request.args.get('lng')
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT nickname,shot,introduction FROM member WHERE id = %s", (id,))
+        existing = cursor.fetchone()
+        cursor.close()
+        con.close()
+        nickname = existing[0]
+        shot = existing[1]
+        introduction = existing[2]
+        return render_template('reserve.html', id=id,price=price,nickname=nickname,shot=shot,introduction=introduction,lat=lat,lng=lng)
+    except:
+        return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
+
+@app.route("/api/booking", methods=["POST","GET","DELETE"])
+def booking():
+    if request.method == "POST":
+        data = request.get_json()
+        memberID = data["memberID"]
+        nannyID = data["nannyID"]
+        dateStart = data["dateStart"]
+        dateEnd = data["dateEnd"]
+        time = data["time"]
+        price = data["price"]
+        lat = data["lat"]
+        lng = data["lng"]
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT reserver_id FROM booking WHERE reserver_id = %s and checked = %s", (memberID,0))
+        existing = cursor.fetchone()
+        cursor.close()
+        con.close()
+        if existing:
+            return jsonify({"ok": False, "message": "預約已存在"}), 400
+        con, cursor = connect_to_database()
+        cursor.execute("INSERT INTO booking(startDate,endDate,time,reserver_id,nanny_id,price,lat,lng) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)", (dateStart,dateEnd,time,memberID,nannyID,price,lat,lng))
+        con.commit()
+        cursor.close()
+        con.close()
+        return jsonify({"ok": True, "message": "預約成功"}), 200
+    elif request.method == "GET":
+        member_id = request.args.get('id')
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT nanny_id,checked,paid FROM booking WHERE reserver_id = %s", (member_id,))
+        reserverData = cursor.fetchone()
+        cursor.execute("SELECT startDate,endDate,time,reserver_id FROM booking WHERE nanny_id = %s and checked = %s", (member_id,0))
+        nannyData = cursor.fetchall()
+        cursor.close()
+        con.close()
+        startDate_list=[]
+        endDate_list=[]
+        time_list=[]
+        reserver_id_list=[]
+        for i in range(0,len(nannyData)):
+            startDate_list.append(nannyData[i][0])
+            endDate_list.append(nannyData[i][1])
+            time_list.append(nannyData[i][2])
+            reserver_id_list.append(nannyData[i][3])
+        data = {}
+        if reserverData and nannyData:
+            data = {
+                "nannyID":reserverData[0],
+                "checked":reserverData[1],
+                "paid":reserverData[2],
+                "startDate_list":startDate_list,
+                "endDate_list":endDate_list,
+                "time_list":time_list,
+                "reserver_id_list":reserver_id_list
+            }
+        elif reserverData:
+            data = {
+                "nannyID":reserverData[0],
+                "checked":reserverData[1],
+                "paid":reserverData[2]
+            }
+        elif nannyData:
+            data = {
+                "startDate_list":startDate_list,
+                "endDate_list":endDate_list,
+                "time_list":time_list,
+                "reserver_id_list":reserver_id_list
+            }
+        return jsonify(data), 200
+    else:
+        member_id = request.args.get('id')
+        con, cursor = connect_to_database()
+        cursor.execute("DELETE FROM booking WHERE reserver_id = %s", (member_id,))
+        con.commit()
+        cursor.close()
+        con.close()
+        return jsonify({"ok": True, "message": "刪除成功"}), 200
+@app.route("/api/checked", methods=["POST","GET"])
+def checked():
+    if request.method == "POST":
+        data = request.get_json()
+        member_id = data["id"]
+        con, cursor = connect_to_database()
+        cursor.execute("UPDATE booking SET checked=%s WHERE reserver_id = %s", (1,member_id,))
+        con.commit()
+        cursor.close()
+        con.close()
+        return jsonify({"ok": True, "message": "確認成功"}), 200
+    else:
+        member_id = request.args.get('id')
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT nanny_id,startDate,endDate,time,price FROM booking WHERE reserver_id = %s and checked=%s", (member_id,1))
+        reserverData = cursor.fetchone()
+        cursor.execute("SELECT nickname FROM member WHERE id = %s", (member_id,))
+        memberData = cursor.fetchone()
+        nanny_id = reserverData[0]
+        cursor.execute("SELECT nickname FROM member WHERE id = %s", (nanny_id,))
+        nannyData = cursor.fetchone()
+        con.commit()
+        cursor.close()
+        con.close()
+        data = {
+            "nanny_nickname":nannyData[0],
+            "nickname":memberData[0],
+            "nanny_id":reserverData[0],
+            "startDate":reserverData[1],
+            "endDate":reserverData[2],
+            "time":reserverData[3],
+            "price":reserverData[4]
+        }
+        return jsonify(data), 200
+@app.route("/api/order", methods=["POST","GET"])
+def orderCheck():
+    if request.method == "POST":
+        data = request.get_json()
+        member_id = data["member_id"]
+        orderDate = data["orderDate"]
+        orderPrice = data["orderPrice"]
+        name_input = data["name_input"]
+        phone_input = data["phone_input"]
+        address_input = data["address_input"]
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT nickname FROM member WHERE id = %s", (member_id,))
+        memberData = cursor.fetchone()
+        reserverName = memberData[0]
+        cursor.execute("SELECT nanny_id FROM booking WHERE reserver_id = %s", (member_id,))
+        nannyData = cursor.fetchone()
+        nannyId = nannyData[0]
+        cursor.execute("SELECT nickname FROM member WHERE id = %s", (nannyId,))
+        nannyData = cursor.fetchone()
+        nannyName = nannyData[0]
+        cursor.execute(
+            "INSERT INTO order(orderDate,orderPrice,nanny_id,reserver_id,address,phoneNumber,contactName) VALUES (%s,%s,%s,%s,%s,%s,%s)", (orderDate,orderPrice,nannyId,member_id,address_input,phone_input,name_input))
+        con.commit()
+        cursor.execute("UPDATE booking SET paid=%s WHERE reserver_id = %s", (1,member_id,))
+        con.commit()
+        cursor.close()
+        con.close()
+        return jsonify({"ok": True, "message": "付款成功"}), 200
+    else:
+        member_id = request.args.get('id')
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT nanny_id, price, paid, startDate, endDate FROM booking WHERE reserver_id = %s and checked =%s", (member_id,1))
+        nanny_name_list=[]
+        price_list=[]
+        shot_list=[]
+        paid_list = []
+        bookingData = cursor.fetchall()
+        for i in range(0,len(bookingData)):
+            cursor.execute("SELECT nickname, shot FROM member WHERE id = %s", (bookingData[i][0],))
+            data = cursor.fetchone()
+            nanny_name_list.append(data[0])
+            shot_list.append(data[1])
+            if (bookingData[i][2]==0):
+                paid_list.append("未付款")
+            else:
+                paid_list.append("已付款")
+            day = (bookingData[i][4] - bookingData[i][3]).days
+            price = day*bookingData[i][1]
+            price_list.append(price)
+        cursor.close()
+        con.close()
+        data = {
+            "nanny_name_list":nanny_name_list,
+            "price_list":price_list,
+            "shot_list":shot_list,
+            "paid_list":paid_list
+        }
+        return jsonify(data), 200
+
 if __name__ == '__main__':
     CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-    socketio.run(app,host="0.0.0.0",port=3000,debug=False)
+    socketio.run(app,host="0.0.0.0",port=3000,debug=True)
 
