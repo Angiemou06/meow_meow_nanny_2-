@@ -263,19 +263,19 @@
     background-size: cover;
 }
 .nanny-name-2{
-    margin-left: 20px;
-    margin-right: 20px;
     font-weight: 700;
 }
 .order-price{
-    margin-right: 20px;
     font-weight: 500;
 }
 .order-status{
-    position: absolute;
-    right: 180px;
-    /* margin-left: 100px; */
     font-weight: 500;
+}
+.added-div{
+    margin-left: 10px;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
 }
 footer{
     height: 10vh;

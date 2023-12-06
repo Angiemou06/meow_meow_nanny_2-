@@ -336,18 +336,21 @@ btn2.addEventListener('click',()=>{
                 img.className = "img";
                 img.src = data["shot_list"][i];
                 imgContainer.appendChild(img);
+                const addedDiv = document.createElement('div');
+                addedDiv.className = "added-div";
+                container.appendChild(addedDiv);
                 nannyName2 = document.createElement('div');
                 nannyName2.className = "nanny-name-2";
                 nannyName2.innerHTML = "保姆名稱："+data["nanny_name_list"][i];
-                container.appendChild(nannyName2);
+                addedDiv.appendChild(nannyName2);
                 orderPrice = document.createElement('div');
                 orderPrice.className = "order-price";
                 orderPrice.innerHTML = "訂單價格："+data["price_list"][i]+"元";
-                container.appendChild(orderPrice);
+                addedDiv.appendChild(orderPrice);
                 orderStatus = document.createElement('div');
                 orderStatus.className = "order-status";
                 orderStatus.innerHTML = "訂單狀態："+data["paid_list"][i];
-                container.appendChild(orderStatus);
+                addedDiv.appendChild(orderStatus);
             }
         }
         hr2.style.visibility="visible";
