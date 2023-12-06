@@ -49,19 +49,30 @@ signin_button.addEventListener('click',()=>{
     fetchSignIn();
 })
 function fetchSignIn(){
-    let data={
-        "email": signin_email.value,
-        "password": signin_password.value
+    if (signin_email.value == "") {
+        alert("請輸入信箱！")
     }
-    src="/api/user/auth";
-    fetch(src,{method: "PUT",headers: {'Content-Type': 'application/json'},body: JSON.stringify(data)})
-    .then(function (response){
-        return response.json();
-    })
-    .then(function (data){
-        if (data["token"]){
-            window.location="/index";
-            localStorage.setItem('Token', data["token"]);
+    else if (signin_password.value == "") {
+        alert("請輸入密碼！")
+    }
+    else{
+        let data={
+            "email": signin_email.value,
+            "password": signin_password.value
         }
-    })
+        src="/api/user/auth";
+        fetch(src,{method: "PUT",headers: {'Content-Type': 'application/json'},body: JSON.stringify(data)})
+        .then(function (response){
+            return response.json();
+        })
+        .then(function (data){
+            if (data["token"]){
+                window.location="/index";
+                localStorage.setItem('Token', data["token"]);
+            }
+            else{
+                alert("帳號或密碼輸入錯誤！")
+            }
+        })
+    }
 }

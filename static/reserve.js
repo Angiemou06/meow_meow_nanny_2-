@@ -77,7 +77,7 @@ orderButton.addEventListener('click',()=>{
             window.location="/booking";
         }
         else if (data["ok"]== false){
-            alert("須先取消原先預約才可再進行其他預約")
+            alert("須先取消原先預約或將已完成預約進行付款，才可進行其他預約")
             return
         }
     })

@@ -243,16 +243,17 @@
     display: none;
 }
 .container{
-    position: absolute;
+    /* position: absolute; */
+    display: flex;
+    align-items: center;
     height: 100px;
-    width: 800px;
+    width: 99%;
     border: 1px solid #ef9782;
 }
 .img-container{
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    position: absolute;
     overflow: hidden;
     border: 1px solid #000000;
 }
@@ -262,21 +263,18 @@
     background-size: cover;
 }
 .nanny-name-2{
-    position: relative;
-    top:10px;
-    left:120px;
+    margin-left: 20px;
+    margin-right: 20px;
     font-weight: 700;
 }
 .order-price{
-    position: relative;
-    top:20px;
-    left:120px;
+    margin-right: 20px;
     font-weight: 500;
 }
 .order-status{
-    position: relative;
-    top:30px;
-    left:120px;
+    position: absolute;
+    right: 180px;
+    /* margin-left: 100px; */
     font-weight: 500;
 }
 footer{

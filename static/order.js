@@ -1,7 +1,8 @@
 let btn1 = document.getElementById("btn1");
 let btn2 = document.getElementById("btn2");
 let btn3 = document.getElementById("btn3");
-orderSubDetailContainer = document.getElementById("order-sub-detail-container");
+let orderSubDetailContainer = document.getElementById("order-sub-detail-container");
+let history_order_container = document.getElementById("history-order-container");
 let user_member_id;
 let hello = document.getElementById("hello");
 let order_detail = document.getElementById("order-detail");
@@ -16,9 +17,8 @@ let hr2 = document.getElementById("hr2");
 
 window.onload = async function () {
     await checkUserStatusandData();
-    await bt1clicked();
+    bt1clicked();
     hr1.style.visibility="visible";
-    orderSubDetailContainer.style.display="block";
 };
 
 async function checkUserStatusandData() {
@@ -44,6 +44,8 @@ async function checkUserStatusandData() {
 }
 
 function bt1clicked(){
+    history_order_container.style.display="none"
+    success_pay.style.display = "none";
     src = `/api/checked?id=${user_member_id}`
     fetch(src,{method: "GET"})
     .then(function(response) {
@@ -52,8 +54,8 @@ function bt1clicked(){
         }
     })
     .then(function(data){
-        if (data["nanny_nickname"]){
-            order_detail.style.display = "block";
+        if (data["nanny_nickname"] != ""){
+            orderSubDetailContainer.style.display="block";
             hello.innerHTML = data["nickname"]+" 您好，以下是您預約的到府貓貓保姆服務：";
             const nannyName = document.createElement('div');
             nannyName.innerHTML = "提供服務保姆： "+data["nanny_nickname"];
@@ -100,7 +102,10 @@ function bt1clicked(){
 }
 
 btn1.addEventListener('click',()=>{
-    window.location="/order";
+    hr1.style.visibility="visible";
+    hr2.style.visibility="hidden";
+    bt1clicked();
+
 });
 
 TPDirect.setupSDK(137094, 'app_3nR5emGikrgjUTs0oy4Ld75bVkUKL1zTd9zXsqTDz7qU5NqTbzKXgeMr7CYL', 'sandbox');
@@ -305,8 +310,11 @@ booking_button.addEventListener('click',() =>{
 });
 
 btn2.addEventListener('click',()=>{
+    history_order_container.innerHTML="";
+    success_pay.style.display = "none";
     hr1.style.visibility="hidden";
-    orderSubDetailContainer.innerHTML="";
+    orderSubDetailContainer.style.display="none";
+    history_order_container.style.display="block"
     src = `/api/order?id=${user_member_id}`;
     fetch(src,{method: "GET"})
     .then(function(response) {
@@ -315,13 +323,12 @@ btn2.addEventListener('click',()=>{
         }
     })
     .then(function(data){
-        console.log(data);
         if( data["nanny_name_list"] ){
             const number = data["nanny_name_list"].length;
             for (i=0;i<number;i++){
                 container = document.createElement('div');
                 container.className = "container";
-                orderSubDetailContainer.appendChild(container);
+                history_order_container.appendChild(container);
                 imgContainer = document.createElement('div');
                 imgContainer.className = "img-container";
                 container.appendChild(imgContainer);

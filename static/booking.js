@@ -91,23 +91,14 @@ async function bt1clicked(){
             nannyContainer.appendChild(messageDiv);
             const Button = document.createElement('button');
             Button.className = "Button";
-            if (checked == 0){
-                Button.textContent = "取消預約";
-                nannyContainer.appendChild(Button);
-                Button.addEventListener('click',()=>{
-                    url = `/api/booking?id=${user_member_id}`
-                    fetch(url,{method: "DELETE"})
-                    .then(
-                        nannyContainer.innerHTML="");
-                });
-            }
-            else{
-                Button.textContent = "前往付款";
-                nannyContainer.appendChild(Button);
-                Button.addEventListener('click', function() {
-                    window.location.href = "/order";
-                });
-            }
+            Button.textContent = "取消預約";
+            nannyContainer.appendChild(Button);
+            Button.addEventListener('click',()=>{
+                url = `/api/booking?id=${user_member_id}`
+                fetch(url,{method: "DELETE"})
+                .then(
+                    nannyContainer.innerHTML="");
+            });
             container.appendChild(nannyContainer);
         });   
     }; 
@@ -177,6 +168,7 @@ btn2.addEventListener('click',async()=>{
                     }
                     fetch(url,{method: "POST",headers: {'Content-Type': 'application/json'},body: JSON.stringify(checkedData)})
                     .then(
+
                         window.location="/booking"
                     );
                 });

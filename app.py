@@ -98,13 +98,15 @@ def connect_to_database():
 
 # test table
 # con, cursor = connect_to_database()
-# cursor.execute("DROP TABLE `order`")
+# cursor.execute("DROP TABLE booking")
 # con.commit()
 # cursor.close()
 # con.close()
 # cursor.execute("SELECT * FROM booking")
 # data = cursor.fetchall()
 # print(data)
+# cursor.close()
+# con.close()
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'bmp', 'tiff', 'tif', 'gif', 'jpeg'}
 def allowed_file(filename):
@@ -189,7 +191,6 @@ def signin():
         cursor.close()
         con.close()
         if existing_user:
-            print("hi123")
             payload = {
                 'id': existing_user[0],
                 'name': existing_user[1],
@@ -562,7 +563,7 @@ def booking():
         lat = data["lat"]
         lng = data["lng"]
         con, cursor = connect_to_database()
-        cursor.execute("SELECT reserver_id FROM booking WHERE reserver_id = %s and checked = %s", (memberID,0))
+        cursor.execute("SELECT reserver_id FROM booking WHERE reserver_id = %s and (checked = %s or paid = %s)", (memberID,0,0))
         existing = cursor.fetchone()
         cursor.close()
         con.close()
@@ -577,7 +578,7 @@ def booking():
     elif request.method == "GET":
         member_id = request.args.get('id')
         con, cursor = connect_to_database()
-        cursor.execute("SELECT nanny_id,checked,paid FROM booking WHERE reserver_id = %s", (member_id,))
+        cursor.execute("SELECT nanny_id,checked,paid FROM booking WHERE reserver_id = %s and checked = %s", (member_id,0))
         reserverData = cursor.fetchone()
         cursor.execute("SELECT startDate,endDate,time,reserver_id FROM booking WHERE nanny_id = %s and checked = %s", (member_id,0))
         nannyData = cursor.fetchall()
@@ -639,25 +640,39 @@ def checked():
     else:
         member_id = request.args.get('id')
         con, cursor = connect_to_database()
-        cursor.execute("SELECT nanny_id,startDate,endDate,time,price FROM booking WHERE reserver_id = %s and checked=%s", (member_id,1))
+        cursor.execute("SELECT nanny_id,startDate,endDate,time,price FROM booking WHERE reserver_id = %s and checked=%s and paid=%s", (member_id,1,0))
         reserverData = cursor.fetchone()
-        cursor.execute("SELECT nickname FROM member WHERE id = %s", (member_id,))
-        memberData = cursor.fetchone()
-        nanny_id = reserverData[0]
-        cursor.execute("SELECT nickname FROM member WHERE id = %s", (nanny_id,))
-        nannyData = cursor.fetchone()
-        con.commit()
         cursor.close()
         con.close()
-        data = {
-            "nanny_nickname":nannyData[0],
-            "nickname":memberData[0],
-            "nanny_id":reserverData[0],
-            "startDate":reserverData[1],
-            "endDate":reserverData[2],
-            "time":reserverData[3],
-            "price":reserverData[4]
-        }
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT nickname FROM member WHERE id = %s", (member_id,))
+        memberData = cursor.fetchone()
+        cursor.close()
+        con.close()
+        data={"nanny_nickname":"",
+                "nickname":"",
+                "nanny_id":"",
+                "startDate":"",
+                "endDate":"",
+                "time":"",
+                "price":""}
+        if (reserverData):
+            nanny_id = reserverData[0]
+            con, cursor = connect_to_database()
+            cursor.execute("SELECT nickname FROM member WHERE id = %s", (nanny_id,))
+            nannyData = cursor.fetchone()
+            con.commit()
+            cursor.close()
+            con.close()
+            data = {
+                "nanny_nickname":nannyData[0],
+                "nickname":memberData[0],
+                "nanny_id":reserverData[0],
+                "startDate":reserverData[1],
+                "endDate":reserverData[2],
+                "time":reserverData[3],
+                "price":reserverData[4]
+            }
         return jsonify(data), 200
 @app.route("/api/order", methods=["POST","GET"])
 def orderCheck():
@@ -673,15 +688,27 @@ def orderCheck():
         cursor.execute("SELECT nickname FROM member WHERE id = %s", (member_id,))
         memberData = cursor.fetchone()
         reserverName = memberData[0]
-        cursor.execute("SELECT nanny_id FROM booking WHERE reserver_id = %s", (member_id,))
+        cursor.close()
+        con.close()
+        con, cursor = connect_to_database()
+        cursor.execute("SELECT nanny_id FROM booking WHERE reserver_id = %s and checked=%s and paid=%s", (member_id,1,0))
         nannyData = cursor.fetchone()
+        cursor.close()
+        con.close()
         nannyId = nannyData[0]
+        con, cursor = connect_to_database()
         cursor.execute("SELECT nickname FROM member WHERE id = %s", (nannyId,))
         nannyData = cursor.fetchone()
+        cursor.close()
+        con.close()
         nannyName = nannyData[0]
+        con, cursor = connect_to_database()
         cursor.execute(
-            "INSERT INTO order(orderDate,orderPrice,nanny_id,reserver_id,address,phoneNumber,contactName) VALUES (%s,%s,%s,%s,%s,%s,%s)", (orderDate,orderPrice,nannyId,member_id,address_input,phone_input,name_input))
+            "INSERT INTO `order`(orderDate,orderPrice,nanny_id,reserver_id,address,phoneNumber,contactName) VALUES (%s,%s,%s,%s,%s,%s,%s)", (orderDate,orderPrice,nannyId,member_id,address_input,phone_input,name_input))
         con.commit()
+        cursor.close()
+        con.close()
+        con, cursor = connect_to_database()
         cursor.execute("UPDATE booking SET paid=%s WHERE reserver_id = %s", (1,member_id,))
         con.commit()
         cursor.close()
@@ -691,14 +718,19 @@ def orderCheck():
         member_id = request.args.get('id')
         con, cursor = connect_to_database()
         cursor.execute("SELECT nanny_id, price, paid, startDate, endDate FROM booking WHERE reserver_id = %s and checked =%s", (member_id,1))
+        bookingData = cursor.fetchall()
+        cursor.close()
+        con.close()
         nanny_name_list=[]
         price_list=[]
         shot_list=[]
         paid_list = []
-        bookingData = cursor.fetchall()
         for i in range(0,len(bookingData)):
+            con, cursor = connect_to_database()
             cursor.execute("SELECT nickname, shot FROM member WHERE id = %s", (bookingData[i][0],))
             data = cursor.fetchone()
+            cursor.close()
+            con.close()
             nanny_name_list.append(data[0])
             shot_list.append(data[1])
             if (bookingData[i][2]==0):
@@ -708,8 +740,6 @@ def orderCheck():
             day = (bookingData[i][4] - bookingData[i][3]).days
             price = day*bookingData[i][1]
             price_list.append(price)
-        cursor.close()
-        con.close()
         data = {
             "nanny_name_list":nanny_name_list,
             "price_list":price_list,
@@ -720,5 +750,5 @@ def orderCheck():
 
 if __name__ == '__main__':
     CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-    socketio.run(app,host="0.0.0.0",port=3000,debug=False)
+    socketio.run(app,host="0.0.0.0",port=3000,debug=True)
 

@@ -122,7 +122,6 @@ function markerClick(){
             order_button.className = "order-button";
             profile_container.appendChild(order_button);
             order_button.addEventListener('click',()=>{
-                console.log(marker.position.lat)
                 window.location.href=' /reserve?id='+marker.member_id+"&price="+marker.price+"&lat="+marker.getPosition().lat()+"&lng="+marker.getPosition().lng();
             });
             const talk_button = document.createElement('button');
@@ -240,6 +239,9 @@ distanceButtons.forEach(button => {
 })
 
 function makeCircle(){
+    if (currentCircle) {
+        currentCircle.setMap(null);
+    }
     currentCircle = new google.maps.Circle({
         map: map,
         center: { lat: currentPosition["lat"], lng: currentPosition["lng"] },

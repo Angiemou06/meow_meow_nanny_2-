@@ -117,6 +117,7 @@ function showLocation(){
         }
     })
     .then(function(data) {
+        console.log(data)
         let i = 0;
         location_container.innerHTML = "";
         if (data['id']){
@@ -129,6 +130,10 @@ function showLocation(){
                 addDiv.className = 'added-div';
                 addDiv.innerHTML = item;
                 addContainer.appendChild(addDiv);
+                const addPrice = document.createElement('div');
+                addPrice.innerHTML = "服務費用："+data["price"][i]+"元/次";
+                addPrice.className = "added-price"
+                addContainer.appendChild(addPrice);
                 const addButton = document.createElement('button');
                 addButton.id = data["id"][i];
                 addButton.style.backgroundImage = `url("static/image/delete.png")`;
