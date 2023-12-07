@@ -152,7 +152,12 @@ body{
     font-size: 20px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    resize: none;
 }
+/* input[type="file"] {
+    display: none;
+} */
+
 footer{
     height: 10vh;
     display: flex;

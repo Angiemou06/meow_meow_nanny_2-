@@ -109,15 +109,19 @@ function getCurrentLocation() {
 };
 
 function showLocation(){
-    src = `/api/service?id=${user_member_id}`;
-    fetch(src,{method: "GET"})
+    src = "/api/service";
+    fetch(src,{
+        method: "GET",
+        headers: {
+            'id': user_member_id,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();
         }
     })
     .then(function(data) {
-        console.log(data)
         let i = 0;
         location_container.innerHTML = "";
         if (data['id']){

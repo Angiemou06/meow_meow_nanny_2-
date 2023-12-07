@@ -74,8 +74,13 @@ async function checkUserStatusandData() {
 }
 
 function getMemberData(){
-    url = `/api/memberData?id=${user_member_id}`;
-    fetch(url,{method: "GET"})
+    url = "/api/memberData";
+    fetch(url, {
+        method: "GET",
+        headers: {
+            'id': user_member_id,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();

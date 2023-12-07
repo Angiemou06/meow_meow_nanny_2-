@@ -31,6 +31,7 @@
 }
 .namelist-container:hover {
     background-color: #cec9c9;
+    color: #ffffff;
 }
 .contact-name{
     height: 30px;

@@ -46,8 +46,13 @@ async function checkUserStatusandData() {
 function bt1clicked(){
     history_order_container.style.display="none"
     success_pay.style.display = "none";
-    src = `/api/checked?id=${user_member_id}`
-    fetch(src,{method: "GET"})
+    src = "/api/checked"
+    fetch(src,{
+        method: "GET",
+        headers: {
+            'id': user_member_id,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();
@@ -315,8 +320,14 @@ btn2.addEventListener('click',()=>{
     hr1.style.visibility="hidden";
     orderSubDetailContainer.style.display="none";
     history_order_container.style.display="block"
-    src = `/api/order?id=${user_member_id}`;
-    fetch(src,{method: "GET"})
+    hr2.style.visibility="visible";
+    src = "/api/order";
+    fetch(src,{
+        method: "GET",
+        headers: {
+            'id': user_member_id,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();
@@ -353,7 +364,6 @@ btn2.addEventListener('click',()=>{
                 addedDiv.appendChild(orderStatus);
             }
         }
-        hr2.style.visibility="visible";
     })
 
 })

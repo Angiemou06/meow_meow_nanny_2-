@@ -104,7 +104,6 @@ let member_2_id;
 function markerClick(){
     markers.forEach(marker => {
         marker.addListener('click', () => {
-            console.log(marker);
             const profile_container = document.getElementById("profile-container");
             profile_container.style.display="none";
             profile_container.innerHTML="";
@@ -154,8 +153,9 @@ function markerClick(){
                     }
                 })
                 .then(function(data) {
-                    console.log(data);
-                    window.location="/message";
+                    console.log(data["room_id"]);
+                    // localStorage.setItem('myData', JSON.stringify({ key: 'value' }));
+                    // window.location="/message";
                 })
                 .catch(error => {
                     console.log('Network error:', error);
@@ -256,8 +256,13 @@ function makeCircle(){
 };
 
 function recheckMarker(){
-    src = `/api/positionFilter?price=${priceRange.value}`;
-    fetch(src,{method: "GET"})
+    src = "/api/positionFilter";
+    fetch(src, {
+        method: "GET",
+        headers: {
+            'price': priceRange.value,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();
@@ -273,8 +278,14 @@ function recheckMarker(){
                 marker.setMap(null);
             });
             if (distance <= radius){
-                src = `/api/position?lat=${point[1]}&lng=${point[2]}`;
-                fetch(src,{method: "GET"})
+                src = "/api/position";
+                fetch(src, {
+                    method: "GET",
+                    headers: {
+                        'lat': point[1],
+                        'lng':point[2]
+                    }
+                })
                 .then(function(response) {
                     if (response) {
                         return response.json();

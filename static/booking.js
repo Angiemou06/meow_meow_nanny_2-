@@ -40,8 +40,13 @@ async function checkUserStatusandData() {
 }
 
 async function getBookingData(){
-    src = `/api/booking?id=${user_member_id}`
-    await fetch(src,{method: "GET"})
+    src = "/api/booking"
+    await fetch(src, {
+        method: "GET",
+        headers: {
+            'id': user_member_id,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();
@@ -63,13 +68,13 @@ async function bt1clicked(){
     container.innerHTML="";
     await getBookingData();
     if (nannyID){
-        src = `/api/memberData?id=${nannyID}`
-        fetch(src,{method: "GET"})
-        .then(function(response) {
-            if (response) {
-                return response.json();
-            }
-        })
+        src = "/api/memberData"
+        fetch(src, {
+        method: "GET",
+        headers: {
+            'id': nannyID,
+        }
+    })
         .then(function(data){
             const nannyContainer = document.createElement('div');
             nannyContainer.className = "nanny-container";
@@ -117,8 +122,13 @@ btn2.addEventListener('click',async()=>{
     if(startDate_list){
         const number = startDate_list.length;
         for (let i=0;i<number;i++){
-            src = `/api/memberData?id=${reserver_id_list[i]}`
-            fetch(src,{method: "GET"})
+            src = "/api/memberData";
+            fetch(src, {
+                method: "GET",
+                headers: {
+                    'price': reserver_id_list[i],
+                }
+            })
             .then(function(response) {
                 if (response) {
                     return response.json();

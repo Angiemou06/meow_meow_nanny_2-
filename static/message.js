@@ -49,8 +49,13 @@ async function checkUserStatusandData() {
 
 let name_list = document.getElementById("name-list");
 function createRoom(){
-    src = `/api/room?id=${user_member_id}`;
-    fetch(src,{method: "GET"})
+    src = "/api/room";
+    fetch(src, {
+        method: "GET",
+        headers: {
+            'id': user_member_id,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();
@@ -74,8 +79,13 @@ function createRoom(){
                     ct = 1;
                 });
             };
-            url = `/api/memberData?id=${contact_id}`;
-            await fetch(url,{method: "GET"})
+            url = "/api/memberData";
+            await fetch(url, {
+                method: "GET",
+                headers: {
+                    'id': contact_id,
+                }
+            })
             .then(function(response) {
                 if (response) {
                     return response.json();
@@ -109,7 +119,13 @@ function createRoom(){
         let namelist_containers = document.querySelectorAll(".namelist-container");
         namelist_containers.forEach(namelist_container => {
             namelist_container.addEventListener('click',() => {
+                namelist_containers.forEach(container => {
+                    container.style.backgroundColor = "#ffffff";
+                    container.style.color = "#000000";
+                });
                 message.innerHTML = "";
+                namelist_container.style.backgroundColor="#cec9c9";
+                namelist_container.style.color="#ffffff";
                 createChat(namelist_container.id);
             });
         });
@@ -178,8 +194,13 @@ const sendMessage = () => {
 };
 
 function createChat(room_id){
-    src = `/api/chatMessage?roomId=${room_id}`;
-    fetch(src,{method: "GET"})
+    src = "/api/chatMessage";
+    fetch(src,{
+        method: "GET",
+        headers: {
+            'roomId': room_id,
+        }
+    })
     .then(function(response) {
         if (response) {
             return response.json();

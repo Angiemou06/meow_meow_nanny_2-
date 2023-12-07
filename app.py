@@ -264,7 +264,7 @@ def addService():
 @app.route("/api/service", methods=["GET"])
 def getService():
     try:
-        member_id = request.args.get('id')
+        member_id = request.headers.get('id')
         con, cursor = connect_to_database()
         cursor.execute("SELECT * FROM service WHERE member_id = %s",(member_id,))
         information = cursor.fetchall()
@@ -309,8 +309,8 @@ def delService():
 @app.route("/api/position",methods=["GET"])
 def getPosition():
     try:
-        lat = request.args.get('lat')
-        lng = request.args.get('lng')
+        lat = request.headers.get('lat')
+        lng = request.headers.get('lng')
         if lat:
             con, cursor = connect_to_database()
             cursor.execute("SELECT id,member_id,lat,lng,price FROM service WHERE lat = %s and lng = %s",(lat,lng))
@@ -357,9 +357,9 @@ def getPosition():
 @app.route("/api/positionFilter", methods=["GET"])
 def positionFilter():
     try:
-        price = request.args.get('price')
+        price = request.headers.get('price')
         con, cursor = connect_to_database()
-        cursor.execute("SELECT id,lat,lng FROM service  WHERE price <= %s",(price,))
+        cursor.execute("SELECT id,lat,lng FROM service WHERE price <= %s",(price,))
         filter_list = cursor.fetchall()
         cursor.close()
         con.close()
@@ -393,7 +393,7 @@ def room():
             con.close()
             return jsonify({"ok": True}), 200
     else:
-        member_id = request.args.get('id')
+        member_id = request.headers.get('id')
         con, cursor = connect_to_database()
         cursor.execute("SELECT * FROM room  WHERE member_1_id=%s OR member_2_id = %s", (member_id, member_id))
         existing = cursor.fetchall()
@@ -460,7 +460,7 @@ def memberData():
                 return jsonify({"ok": True, "message": "修改關於我成功"}), 200
 
         else:
-            contact_id = request.args.get('id')
+            contact_id = request.headers.get('id')
             con, cursor = connect_to_database()
             cursor.execute("SELECT id, nickname, shot, introduction,email FROM member WHERE id = %s",(contact_id,))
             existing_contact = cursor.fetchone()
@@ -511,7 +511,7 @@ def handle_message(data):
 
 @app.route("/api/chatMessage", methods=["GET"])
 def chatMessage():
-    roomId = request.args.get('roomId')
+    roomId = request.headers.get('roomId')
     print("chatMessage:"+roomId)
     try:
         con, cursor = connect_to_database()
@@ -576,7 +576,7 @@ def booking():
         con.close()
         return jsonify({"ok": True, "message": "預約成功"}), 200
     elif request.method == "GET":
-        member_id = request.args.get('id')
+        member_id = request.headers.get('id')
         con, cursor = connect_to_database()
         cursor.execute("SELECT nanny_id,checked,paid FROM booking WHERE reserver_id = %s and checked = %s", (member_id,0))
         reserverData = cursor.fetchone()
@@ -638,7 +638,7 @@ def checked():
         con.close()
         return jsonify({"ok": True, "message": "確認成功"}), 200
     else:
-        member_id = request.args.get('id')
+        member_id = request.headers.get('id')
         con, cursor = connect_to_database()
         cursor.execute("SELECT nanny_id,startDate,endDate,time,price FROM booking WHERE reserver_id = %s and checked=%s and paid=%s", (member_id,1,0))
         reserverData = cursor.fetchone()
@@ -715,7 +715,7 @@ def orderCheck():
         con.close()
         return jsonify({"ok": True, "message": "付款成功"}), 200
     else:
-        member_id = request.args.get('id')
+        member_id = request.headers.get('id')
         con, cursor = connect_to_database()
         cursor.execute("SELECT nanny_id, price, paid, startDate, endDate FROM booking WHERE reserver_id = %s and checked =%s", (member_id,1))
         bookingData = cursor.fetchall()
