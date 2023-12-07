@@ -7,7 +7,7 @@ let user_member_id;
 
 window.onload = async function () {
     await checkUserStatusandData();
-    createPage();
+    createPage()
 };
 let reserveData = JSON.parse(localStorage.getItem('reserveData'));
 function createPage(){
@@ -24,17 +24,6 @@ function createPage(){
     }
     const order_title = document.getElementById("order-title");
     order_title.innerHTML="向"+reserveData["nickname"]+"提出預約";
-    dateStart.addEventListener('change',()=>{
-        dateEnd.addEventListener('change',()=>{
-            const startDate = new Date(dateStart.value);
-            const endDate = new Date(dateEnd.value);
-            const timeDifference = (endDate - startDate)/86400000;
-            const price_sub_title = document.getElementById("price-sub-title");
-            const price = parseInt(reserveData["price"])*timeDifference
-            price_sub_title.innerHTML="本次服務價格為：新台幣 "+price+" 元";
-        });
-    });
-
 };
 
 async function checkUserStatusandData() {
@@ -86,13 +75,13 @@ orderButton.addEventListener('click',()=>{
     })
     data = {
         "memberID":user_member_id,
-        "nannyID":reserveData["nannyID"],
+        "nannyID":nannyID,
         "dateStart":dateStart.value,
         "dateEnd":dateEnd.value,
         "time":orderTime,
-        "price":reserveData["price"],
-        "lat":reserveData["lat"],
-        "lng":reserveData["lng"]
+        "price":price,
+        "lat":lat,
+        "lng":lng
     }
     src = "/api/booking"
     fetch(src,{method: "POST",headers: {'Content-Type': 'application/json'},body: JSON.stringify(data)})

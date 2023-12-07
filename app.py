@@ -21,13 +21,13 @@ import mysql.connector.pooling
 
 import os
 import datetime
+import uuid
 import jwt
 secret_key = "key123"
 from dotenv import load_dotenv
 load_dotenv()
 from flask_socketio import join_room, leave_room, send, SocketIO
 from flask_cors import CORS
-
 
 db_config = {
     "pool_name": os.getenv("DB_POOL_NAME"),
@@ -137,6 +137,9 @@ def nanny():
 @app.route("/booking")
 def bookingRoute():
     return render_template("booking.html")
+@app.route("/reserve")
+def reserveRoute():
+    return render_template("reserve.html")
 
 @app.route("/api/user", methods=["POST"])
 def signup():
@@ -412,25 +415,31 @@ def room():
             'room_id':room_id_list
         }
         return jsonify(data), 200
+@app.route("/api/picture", methods=["POST","GET"])
+def picture():
+    if request.method == "POST":
+        bucket_name = "testboard.meow-meow-nanny.website"
+        s3 = boto3.resource("s3")
+        uuid_number = uuid.uuid4().hex
+        current_time = str(datetime.datetime.now())
+        uploaded_file = request.files.get('file')
+        id = request.form.get('id')
+        subfilename = uploaded_file.filename.rsplit('.', 1)[1].lower()
+        new_filename = current_time + uuid_number + '.' + subfilename
+        s3.Bucket(bucket_name).upload_fileobj(uploaded_file, new_filename)
+        src = f'https://d2bbn8sfov3acj.cloudfront.net/{new_filename}'
+        data = {
+            'src':src
+        }
+        con, cursor = connect_to_database()
+        cursor.execute("UPDATE member SET shot=%s WHERE id = %s",(src, id))
+        con.commit()
+        cursor.close()
+        con.close()
+        return jsonify(data), 200
 @app.route("/api/memberData", methods=["POST","GET"])
 def memberData():
     try:
-        # if request.method == "POST":
-        #     bucket_name = "testboard.meow-meow-nanny.website"
-        #     s3 = boto3.resource("s3")
-        #     current_time = str(datetime.datetime.now())
-        #     uploaded_file = request.files["file-to-upload"] # 根據命名修改
-        #     if not allowed_file(uploaded_file.filename):
-        #         return "File not allowed!"
-
-        #     new_filename = current_time + '.' + uploaded_file.filename.rsplit('.', 1)[1].lower()
-
-        #     s3.Bucket(bucket_name).upload_fileobj(uploaded_file, new_filename)
-        #     id = request.args.get('id')
-        #     data = {
-                
-        #     }
-        #     bucket = s3.Bucket(bucket_name)
         if request.method == "POST":
             data = request.get_json()
             id = data["id"]
@@ -531,13 +540,13 @@ def chatMessage():
         return (data) ,200
     except:
         return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
-@app.route("/reserve")
+@app.route("/api/reserve", methods=["GET"])
 def reserve():
     try:
-        id = request.args.get('id')
-        price = request.args.get('price')
-        lat = request.args.get('lat')
-        lng = request.args.get('lng')
+        id = request.headers.get('id')
+        price = request.headers.get('price')
+        lat = request.headers.get('lat')
+        lng = request.headers.get('lng')
         con, cursor = connect_to_database()
         cursor.execute("SELECT nickname,shot,introduction FROM member WHERE id = %s", (id,))
         existing = cursor.fetchone()
@@ -546,7 +555,16 @@ def reserve():
         nickname = existing[0]
         shot = existing[1]
         introduction = existing[2]
-        return render_template('reserve.html', id=id,price=price,nickname=nickname,shot=shot,introduction=introduction,lat=lat,lng=lng)
+        data = {
+            'id':id,
+            'price':price,
+            'nickname':nickname,
+            'shot':shot,
+            'introduction':introduction,
+            'lat':lat,
+            'lng':lng
+        }
+        return jsonify(data), 200
     except:
         return jsonify({"error": True, "message": "內部伺服器錯誤"}), 500
 

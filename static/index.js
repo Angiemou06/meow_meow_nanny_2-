@@ -88,8 +88,7 @@ function createMarker(){
                 title: point_nickname,
                 member_id:data["member_id"][index],
                 id:data["id"][index],
-                price: data["price"][index],
-                member_id:data["member_id"][index]
+                price: data["price"][index]
             });
             markers.push(marker);
         });
@@ -120,8 +119,34 @@ function markerClick(){
             order_button.innerHTML="預約"
             order_button.className = "order-button";
             profile_container.appendChild(order_button);
-            order_button.addEventListener('click',()=>{
-                window.location.href=' /reserve?id='+marker.member_id+"&price="+marker.price+"&lat="+marker.getPosition().lat()+"&lng="+marker.getPosition().lng();
+            order_button.addEventListener('click', () => {
+                url = "/api/reserve";
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        'id': marker.member_id,
+                        'price': marker.price,
+                        'lat': marker.getPosition().lat(),
+                        'lng': marker.getPosition().lng()
+                    }})
+                .then(function(response) {
+                    if (response) {
+                        return response.json();
+                    }
+                })
+                .then(function(data) {
+                    // const picture = document.getElementById('picture');
+                    console.log(data)
+                    const nannyID = data["id"];
+                    const price = data["price"];
+                    const lat = data["lat"];
+                    const lng = data["lng"];
+                    const shot = data["shot"];
+                    const introduction = data["introduction"];
+                    const nickname = data["nickname"];
+                    localStorage.setItem('reserveData', JSON.stringify({ nannyID: nannyID, price: price, lat: lat, lng: lng,shot:shot,introduction:introduction,nickname:nickname }));
+                    window.location='/reserve';
+                })
             });
             const talk_button = document.createElement('button');
             talk_button.innerHTML="對談"

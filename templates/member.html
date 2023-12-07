@@ -25,12 +25,12 @@
         <div class="profile-container">
             <div class="profile-sub-container">
                 <div class="profile-top">
-                     <div class="profile-picture-container">
-                        <!-- <label for="file-upload"> -->
-                            <!-- <input type="file" id="file-upload" /> -->
+                    <form class="profile-picture-form" id="picture-form" method="POST" action="/api/picture" enctype="multipart/form-data">
+                        <label class="profile-picture-container" for="file-upload">
+                            <input type="file" id="file-upload" name="file-upload" accept="image/*"/>
                             <img class="profile-picture" id="profile-picture" alt="大頭照">
-                        <!-- </label> -->
-                    </div>
+                        </label>
+                    </form>
                     <div class="profile-revise-container">
                         <div class="profile-title">
                             修改暱稱

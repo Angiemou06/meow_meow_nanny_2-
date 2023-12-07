@@ -75,37 +75,42 @@ async function bt1clicked(){
             'id': nannyID,
         }
     })
-        .then(function(data){
-            const nannyContainer = document.createElement('div');
-            nannyContainer.className = "nanny-container";
-            const imgDiv = document.createElement('div');
-            imgDiv.className = "imgDiv"
-            nannyContainer.appendChild(imgDiv);
-            const img = document.createElement('img');
-            img.className = "img";
-            img.src = data["shot"];
-            imgDiv.appendChild(img);
-            const messageDiv = document.createElement('div');
-            messageDiv.className = "messageDiv";
-            if (checked == 0){
-                messageDiv.innerHTML = "等待"+data["nickname"]+"接受預約中";
-            } 
-            else{
-                messageDiv.innerHTML = data["nickname"]+"已接受預約";
-            }
-            nannyContainer.appendChild(messageDiv);
-            const Button = document.createElement('button');
-            Button.className = "Button";
-            Button.textContent = "取消預約";
-            nannyContainer.appendChild(Button);
-            Button.addEventListener('click',()=>{
-                url = `/api/booking?id=${user_member_id}`
-                fetch(url,{method: "DELETE"})
-                .then(
-                    nannyContainer.innerHTML="");
-            });
-            container.appendChild(nannyContainer);
-        });   
+    .then(function(response) {
+        if (response) {
+            return response.json();
+        }
+    })
+    .then(function(data){
+        const nannyContainer = document.createElement('div');
+        nannyContainer.className = "nanny-container";
+        const imgDiv = document.createElement('div');
+        imgDiv.className = "imgDiv"
+        nannyContainer.appendChild(imgDiv);
+        const img = document.createElement('img');
+        img.className = "img";
+        img.src = data["shot"];
+        imgDiv.appendChild(img);
+        const messageDiv = document.createElement('div');
+        messageDiv.className = "messageDiv";
+        if (checked == 0){
+            messageDiv.innerHTML = "等待"+data["nickname"]+"接受預約中";
+        } 
+        else{
+            messageDiv.innerHTML = data["nickname"]+"已接受預約";
+        }
+        nannyContainer.appendChild(messageDiv);
+        const Button = document.createElement('button');
+        Button.className = "Button";
+        Button.textContent = "取消預約";
+        nannyContainer.appendChild(Button);
+        Button.addEventListener('click',()=>{
+            url = `/api/booking?id=${user_member_id}`
+            fetch(url,{method: "DELETE"})
+            .then(
+                nannyContainer.innerHTML="");
+        });
+        container.appendChild(nannyContainer);
+    });   
     }; 
 }
 btn1.addEventListener('click',()=>{
@@ -126,7 +131,7 @@ btn2.addEventListener('click',async()=>{
             fetch(src, {
                 method: "GET",
                 headers: {
-                    'price': reserver_id_list[i],
+                    'id': reserver_id_list[i],
                 }
             })
             .then(function(response) {

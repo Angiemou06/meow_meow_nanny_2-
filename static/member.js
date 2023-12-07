@@ -6,6 +6,8 @@ let intro_input = document.getElementById("intro-input");
 let intro_submit = document.getElementById("intro-submit");
 let profile_picture = document.getElementById("profile-picture");
 let user_member_id
+let file_upload = document.getElementById("file-upload");
+let picture_form = document.getElementById("picture-form");
 
 nickname_submit.addEventListener('click',()=>{
     reviseMemberData();
@@ -88,7 +90,12 @@ function getMemberData(){
     })
     .then(function(data){
         email_input.placeholder = data["email"];
-        intro_input.placeholder = data["introduction"];
+        if (data["introduction"] == null){
+            intro_input.placeholder = "尚無自我介紹";
+        }
+        else{
+            intro_input.placeholder = data["introduction"];
+        }
         nickname_input.placeholder = data["nickname"];
         profile_picture.src = data["shot"];
     })
@@ -133,3 +140,22 @@ const nanny_button = document.getElementById("nanny-button");
 nanny_button.addEventListener('click', () => {
     window.location="/nanny";
 });
+
+file_upload.addEventListener('change', () => {
+    const formData = new FormData(picture_form);
+    formData.append('file', file_upload.files[0]);
+    formData.append('id', user_member_id);
+    const xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+            profile_picture.src = data.src;
+        } else {
+            console.error('Error uploading picture:', xhr.statusText);
+        }
+    };
+
+    xhr.open('POST', '/api/picture', true);
+    xhr.send(formData);
+})

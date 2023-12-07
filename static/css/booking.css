@@ -70,7 +70,8 @@ footer{
     border: 1px solid #000000;
 }
 .img{
-    background-size: cover;
+    object-fit: cover;
+    object-position: center center;
     border: none;
     height: 200px;
     width: 200px;
@@ -113,7 +114,8 @@ footer{
 .reserver-img{
     width: 100px;
     height: 100px;
-    background-size: cover;
+    object-fit: cover;
+    object-position: center center;
     border: none;
 }
 .reserver-name{
