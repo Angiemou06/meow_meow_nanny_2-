@@ -261,7 +261,8 @@
 .img{
     width: 100px;
     height: 100px;
-    background-size: cover;
+    object-fit: cover;
+    object-position: center center;
 }
 .nanny-name-2{
     font-weight: 700;
