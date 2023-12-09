@@ -17,7 +17,7 @@
 import boto3
 from flask import *
 import mysql.connector
-import mysql.connector.pooling
+from mysql.connector import pooling
 
 import os
 import datetime
@@ -36,10 +36,10 @@ db_config = {
     "user": os.getenv("DB_USER"),
     "password": os.getenv("DB_PASSWORD"),
     "database": os.getenv("DB_DATABASE"),
+    "pool_reset_session":True,
 }
 
 connection_pool = mysql.connector.pooling.MySQLConnectionPool(**db_config)
-
 
 def connect_to_database():
     try:
@@ -470,7 +470,9 @@ def memberData():
 
         else:
             contact_id = request.headers.get('id')
+            print(datetime.datetime.now())
             con, cursor = connect_to_database()
+            print(datetime.datetime.now())
             cursor.execute("SELECT id, nickname, shot, introduction,email FROM member WHERE id = %s",(contact_id,))
             existing_contact = cursor.fetchone()
             cursor.close()
